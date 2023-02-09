@@ -1,4 +1,10 @@
 -- Database Name: wildlife_spotter
+
+DROP TABLE IF EXISTS "user";
+DROP TABLE IF EXISTS "marker";
+DROP TABLE IF EXISTS "animal";
+DROP TABLE IF EXISTS "favorite";
+
 CREATE TABLE "user" (
 	"id" serial PRIMARY KEY,
 	"username" VARCHAR (80) UNIQUE NOT NULL,
@@ -24,6 +30,7 @@ CREATE TABLE "animal" (
 CREATE TABLE "favorite" (
 	"id" serial PRIMARY KEY,
 	"user_id" int REFERENCES "user",
+	"name" VARCHAR,
 	"lat" DECIMAL(10, 7) NOT NULL,
 	"lng" DECIMAL(10, 7) NOT NULL
-    );
+	);
