@@ -1,26 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import { GoogleMap, Marker, InfoWindow } from '@react-google-maps/api';
+import { GoogleMap, Marker, InfoWindow, LoadScript } from '@react-google-maps/api';
 import { useDispatch, useSelector } from 'react-redux';
 
-// http://localhost:3000/#/home
-// require('dotenv').config(); ???
-
 const MapContainer = () => {
+
     const dispatch = useDispatch();
 
     useEffect(() => {
-
+        getLocation();
     }, []);
 
-    const user = {
-        location: {
-            lat: 41.4065,
-            lng: 2.162
+    const getLocation = () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                var lat = position.coords.latitude;
+                var lng = position.coords.longitude;
+                setCenter({ lat, lng });
+                setIsLoaded(true);
+                console.log("Latitude: " + lat + ", Longitude: " + lng);
+            });
+        } else {
+            console.log("Geolocation is not supported by this browser.");
         }
     };
 
+    const [isLoaded, setIsLoaded] = useState(false);
     const [selected, setSelected] = useState({});
-    const [center, setCenter] = useState(user.location);
+    const [center, setCenter] = useState({});
 
     const onSelect = item => {
         setSelected(item);
@@ -34,42 +40,42 @@ const MapContainer = () => {
         width: "100%",
     };
 
-    // const defaultCenter = {
-    //     lat: 41.3851, lng: 2.1734
-    // }
-
-    const userIcon =
+    const deviceLocationIcon =
         "http://maps.google.com/mapfiles/ms/icons/blue-dot.png";
 
     return (
         <>
-            <h1>User's Location: lat: {user.location.lat}, lng: {user.location.lng}</h1>
+            {isLoaded &&
 
-                <GoogleMap
-                    mapContainerStyle={mapStyles}
-                    zoom={13}
-                    center={center}>
+                <LoadScript
+                    googleMapsApiKey={process.env.REACT_APP_GOOGLE_API_KEY}>
 
-                    <Marker key={user.name} position={user.location} icon={userIcon} onClick={() => onSelect(user)} />
+                    <GoogleMap
+                        mapContainerStyle={mapStyles}
+                        zoom={13}
+                        center={center}>
 
-                    {
-                        selected.location &&
-                        (
-                            <InfoWindow
-                                position={selected.location}
-                                clickable={true}
-                                onCloseClick={() => setSelected({})}
-                            >
-                                <div>
-                                    <p>lat: ({Number(selected.location.lat)})</p>
-                                    <p>lng: ({Number(selected.location.lng)})</p>
-                                </div>
-                            </InfoWindow>
-                        )
-                    }
+                        <Marker position={center} icon={deviceLocationIcon} />
 
-                </GoogleMap>
+                        {/* {
+                            selected.location &&
+                            (
+                                <InfoWindow
+                                    position={selected.location}
+                                    clickable={true}
+                                    onCloseClick={() => setSelected({})}
+                                >
+                                    <div>
+                                        <p>lat: ({Number(selected.location.lat)})</p>
+                                        <p>lng: ({Number(selected.location.lng)})</p>
+                                    </div>
+                                </InfoWindow>
+                            )
+                        } */}
 
+                    </GoogleMap>
+                </LoadScript>
+            }
         </>
     )
 }
