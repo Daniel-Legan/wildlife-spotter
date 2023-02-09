@@ -19,6 +19,8 @@ import InfoPage from '../InfoPage/InfoPage';
 import LandingPage from '../LandingPage/LandingPage';
 import LoginPage from '../LoginPage/LoginPage';
 import RegisterPage from '../RegisterPage/RegisterPage';
+import FindParkPage from '../FindParkPage/FindParkPage';
+import FavoritesPage from '../FavoritesPage/FavoritesPage';
 
 import './App.css';
 
@@ -66,6 +68,20 @@ function App() {
             path="/info"
           >
             <InfoPage />
+          </ProtectedRoute>
+
+          <ProtectedRoute
+            exact
+            path="/find"
+          >
+            <FindParkPage />
+          </ProtectedRoute>
+
+          <ProtectedRoute
+            exact
+            path="/favorites"
+          >
+            <FavoritesPage />
           </ProtectedRoute>
 
           <Route
