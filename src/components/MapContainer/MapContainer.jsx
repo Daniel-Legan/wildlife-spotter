@@ -7,22 +7,31 @@ const MapContainer = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        getLocation();
+        // getLocation();
+
+        // Get the user's current location
+        navigator.geolocation.getCurrentPosition((position) => {
+            const { latitude, longitude } = position.coords;
+            // setCurrentLocation({ lat: latitude, lng: longitude });
+            setCenter({ lat: latitude, lng: longitude });
+            setIsLoaded(true);
+            console.log("Latitude: " + latitude + ", Longitude: " + longitude);
+        });
     }, []);
 
-    const getLocation = () => {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function (position) {
-                var lat = position.coords.latitude;
-                var lng = position.coords.longitude;
-                setCenter({ lat, lng });
-                setIsLoaded(true);
-                console.log("Latitude: " + lat + ", Longitude: " + lng);
-            });
-        } else {
-            console.log("Geolocation is not supported by this browser.");
-        }
-    };
+    // const getLocation = () => {
+    //     if (navigator.geolocation) {
+    //         navigator.geolocation.getCurrentPosition(function (position) {
+    //             var lat = position.coords.latitude;
+    //             var lng = position.coords.longitude;
+    //             setCenter({ lat, lng });
+    //             setIsLoaded(true);
+    //             console.log("Latitude: " + lat + ", Longitude: " + lng);
+    //         });
+    //     } else {
+    //         console.log("Geolocation is not supported by this browser.");
+    //     }
+    // };
 
     const [isLoaded, setIsLoaded] = useState(false);
     const [selected, setSelected] = useState({});
@@ -46,7 +55,6 @@ const MapContainer = () => {
     return (
         <>
             {isLoaded &&
-
                 <LoadScript
                     googleMapsApiKey={process.env.REACT_APP_GOOGLE_API_KEY}>
 
@@ -72,7 +80,6 @@ const MapContainer = () => {
                                 </InfoWindow>
                             )
                         } */}
-
                     </GoogleMap>
                 </LoadScript>
             }

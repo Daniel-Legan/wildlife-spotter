@@ -2,6 +2,7 @@ import React from 'react';
 import LogOutButton from '../LogOutButton/LogOutButton';
 import { useSelector } from 'react-redux';
 import MapContainer from '../MapContainer/MapContainer';
+import AddressAutocomplete from '../AddressAutocomplete/AddressAutocomplete';
 
 function UserPage() {
   // this component doesn't do much to start, just renders some user reducer info to the DOM
@@ -12,6 +13,7 @@ function UserPage() {
       <p>Your ID is: {user.id}</p>
 
       <LogOutButton className="btn" />
+      <AddressAutocomplete />
       <MapContainer />
     </div>
   );
