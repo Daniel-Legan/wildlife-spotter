@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import PlacesAutocomplete, {
     geocodeByAddress,
     getLatLng,
@@ -15,21 +15,30 @@ function Map() {
     const [userLocation, setUserLocation] = useState(null);
     const [address, setAddress] = useState('');
 
-    const handleLoad = useCallback((map) => {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const { latitude, longitude } = position.coords;
-                    setUserLocation({ lat: latitude, lng: longitude });
-                    map.panTo({ lat: latitude, lng: longitude });
-                },
-                (error) => {
-                    console.error(error);
-                }
-            );
-        } else {
-            console.error('Geolocation is not supported by this browser.');
-        }
+    // const handleLoad = useCallback((map) => {
+    //     if (navigator.geolocation) {
+    //         navigator.geolocation.getCurrentPosition(
+    //             (position) => {
+    //                 const { latitude, longitude } = position.coords;
+    //                 setUserLocation({ lat: latitude, lng: longitude });
+    //                 map.panTo({ lat: latitude, lng: longitude });
+    //             },
+    //             (error) => {
+    //                 console.error(error);
+    //             }
+    //         );
+    //     } else {
+    //         console.error('Geolocation is not supported by this browser.');
+    //     }
+    // }, []);
+
+    useEffect(() => {
+        navigator.geolocation.getCurrentPosition((position) => {
+            const { latitude, longitude } = position.coords;
+            setUserLocation({ lat: latitude, lng: longitude });
+            // map.panTo({ lat: latitude, lng: longitude });
+            console.log("Latitude: " + latitude + ", Longitude: " + longitude);
+        });
     }, []);
 
     const handleSelect = useCallback(
@@ -87,7 +96,7 @@ function Map() {
                 mapContainerStyle={mapContainerStyle}
                 center={userLocation || null}
                 zoom={13}
-                onLoad={handleLoad}
+                // onLoad={handleLoad}
             />
         </LoadScript>
     );
