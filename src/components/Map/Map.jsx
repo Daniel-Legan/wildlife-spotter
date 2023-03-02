@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import PlacesAutocomplete, {
     geocodeByAddress,
     getLatLng,
@@ -14,6 +15,7 @@ const mapContainerStyle = {
 function Map() {
     const [userLocation, setUserLocation] = useState(null);
     const [address, setAddress] = useState('');
+    const dispatch = useDispatch();
 
     // const handleLoad = useCallback((map) => {
     //     if (navigator.geolocation) {
@@ -37,19 +39,41 @@ function Map() {
             const { latitude, longitude } = position.coords;
             setUserLocation({ lat: latitude, lng: longitude });
             // map.panTo({ lat: latitude, lng: longitude });
-            console.log("Latitude: " + latitude + ", Longitude: " + longitude);
+            // console.log("Latitude: " + latitude + ", Longitude: " + longitude);
         });
     }, []);
 
     const handleSelect = useCallback(
         async (value) => {
+            // console.log(value); // suggested result clicked
             const results = await geocodeByAddress(value);
             const latLng = await getLatLng(results[0]);
+            // console.log(results[0].formatted_address);
+            // console.log(results[0].place_id);
+            // console.log(latLng);
             setAddress(value);
             setUserLocation(latLng);
         },
         []
     );
+
+    const handleSave = useCallback(async () => {
+        const results = await geocodeByAddress(address);
+        const latLng = await getLatLng(results[0]);
+        // console.log(address);
+        // console.log(results[0].formatted_address);
+        // console.log(results[0].place_id);
+        // console.log(latLng);
+        dispatch({
+            type: 'ADD_FAVORITE',
+            payload: {
+                placeId: results[0].place_id,
+                address: address,
+                lat: latLng.lat,
+                lng: latLng.lng
+            }
+        });
+    }, [address]);
 
     const handleChange = useCallback((value) => {
         setAddress(value);
@@ -73,6 +97,7 @@ function Map() {
                                 className: 'location-search-input',
                             })}
                         />
+                        <button onClick={handleSave}>save</button>
                         <div className="autocomplete-dropdown-container">
                             {loading && <div>Loading...</div>}
                             {suggestions.map((suggestion) => {
@@ -96,7 +121,7 @@ function Map() {
                 mapContainerStyle={mapContainerStyle}
                 center={userLocation || null}
                 zoom={13}
-                // onLoad={handleLoad}
+            // onLoad={handleLoad}
             />
         </LoadScript>
     );
