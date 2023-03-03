@@ -15,6 +15,10 @@ const mapContainerStyle = {
 function Map() {
     const [userLocation, setUserLocation] = useState(null);
     const [address, setAddress] = useState('');
+    const [markerData, setMarkerData] = useState(null);
+    const [description, setDescription] = useState("");
+    const [infoWindow, setInfoWindow] = useState(null);
+
     const favorite = useSelector((store) => store.favorite.isFavorite);
     const dispatch = useDispatch();
 
@@ -69,6 +73,24 @@ function Map() {
         setAddress(value);
     }, []);
 
+    const handleMarkerClick = () => {
+        setInfoWindow(markerData);
+    };
+
+    const handleInfoWindowClose = () => {
+        setInfoWindow(null);
+    };
+
+    const handleMapClick = (event) => {
+        const newMarkerData = { lat: event.latLng.lat(), lng: event.latLng.lng(), description };
+        setMarkerData(newMarkerData);
+        setDescription("");
+    };
+
+    const handleDescriptionChange = (event) => {
+        setDescription(event.target.value);
+    };
+
     return (
         <LoadScript
             googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
@@ -111,8 +133,29 @@ function Map() {
                 mapContainerStyle={mapContainerStyle}
                 center={userLocation || null}
                 zoom={13}
-            // onLoad={handleLoad}
-            />
+                onClick={handleMapClick}
+            >
+                {markerData && (
+                    <Marker
+                        position={markerData}
+                        onClick={handleMarkerClick}
+                    >
+                        {infoWindow === markerData && (
+                            <InfoWindow onCloseClick={handleInfoWindowClose}>
+                                <div>{markerData.description}</div>
+                            </InfoWindow>
+                        )}
+                    </Marker>
+                )}
+            </GoogleMap>
+            <form>
+                <div>
+                    <label>
+                        Description:
+                        <input required type="text" value={description} onChange={handleDescriptionChange} />
+                    </label>
+                </div>
+            </form>
         </LoadScript>
     );
 }
