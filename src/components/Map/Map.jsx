@@ -18,6 +18,7 @@ function Map() {
     const [markerData, setMarkerData] = useState(null);
     const [description, setDescription] = useState("");
     const [infoWindow, setInfoWindow] = useState(null);
+    const [submit, setSubmit] = useState(false);
 
     const favorite = useSelector((store) => store.favorite.isFavorite);
     const dispatch = useDispatch();
@@ -81,10 +82,22 @@ function Map() {
         setInfoWindow(null);
     };
 
-    const handleMapClick = (event) => {
-        const newMarkerData = { lat: event.latLng.lat(), lng: event.latLng.lng(), description };
-        setMarkerData(newMarkerData);
+    const handleSubmit = () => {
+        setSubmit(true);
+    }
+
+    const handleCancel = () => {
+        setSubmit(false);
         setDescription("");
+    }
+
+    const handleMapClick = (event) => {
+        if (description !== "" && submit === true) {
+            const newMarkerData = { lat: event.latLng.lat(), lng: event.latLng.lng(), description };
+            setMarkerData(newMarkerData);
+            setDescription("");
+            setSubmit(false);
+        }
     };
 
     const handleDescriptionChange = (event) => {
@@ -109,7 +122,7 @@ function Map() {
                                 className: 'location-search-input',
                             })}
                         />
-                        {!favorite ? <button onClick={handleSave}>save</button> : null}
+                        {!favorite ? <button onClick={handleSave}>Save</button> : null}
                         <div className="autocomplete-dropdown-container">
                             {loading && <div>Loading...</div>}
                             {suggestions.map((suggestion) => {
@@ -148,14 +161,24 @@ function Map() {
                     </Marker>
                 )}
             </GoogleMap>
-            <form>
+            {!submit ?
+                <form
+                    onSubmit={handleSubmit}
+                >
+                    <div>
+                        <label>
+                            Description:
+                            <input required type="text" value={description} onChange={handleDescriptionChange} />
+                        </label>
+                        <button>Save</button>
+                    </div>
+                </form>
+                :
                 <div>
-                    <label>
-                        Description:
-                        <input required type="text" value={description} onChange={handleDescriptionChange} />
-                    </label>
+                    <p>Click on map to add marker</p>
+                    <button onClick={handleCancel}>Cancel</button>
                 </div>
-            </form>
+            }
         </LoadScript>
     );
 }
