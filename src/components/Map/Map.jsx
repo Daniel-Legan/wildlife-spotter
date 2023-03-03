@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import PlacesAutocomplete, {
     geocodeByAddress,
     getLatLng,
@@ -15,24 +15,8 @@ const mapContainerStyle = {
 function Map() {
     const [userLocation, setUserLocation] = useState(null);
     const [address, setAddress] = useState('');
+    const favorite = useSelector((store) => store.favorite.isFavorite);
     const dispatch = useDispatch();
-
-    // const handleLoad = useCallback((map) => {
-    //     if (navigator.geolocation) {
-    //         navigator.geolocation.getCurrentPosition(
-    //             (position) => {
-    //                 const { latitude, longitude } = position.coords;
-    //                 setUserLocation({ lat: latitude, lng: longitude });
-    //                 map.panTo({ lat: latitude, lng: longitude });
-    //             },
-    //             (error) => {
-    //                 console.error(error);
-    //             }
-    //         );
-    //     } else {
-    //         console.error('Geolocation is not supported by this browser.');
-    //     }
-    // }, []);
 
     useEffect(() => {
         navigator.geolocation.getCurrentPosition((position) => {
@@ -51,6 +35,12 @@ function Map() {
             // console.log(results[0].formatted_address);
             // console.log(results[0].place_id);
             // console.log(latLng);
+            dispatch({
+                type: 'CHECK_PLACE_ID',
+                payload: {
+                    placeId: results[0].place_id
+                }
+            });
             setAddress(value);
             setUserLocation(latLng);
         },
@@ -97,7 +87,7 @@ function Map() {
                                 className: 'location-search-input',
                             })}
                         />
-                        <button onClick={handleSave}>save</button>
+                        {!favorite ? <button onClick={handleSave}>save</button> : null}
                         <div className="autocomplete-dropdown-container">
                             {loading && <div>Loading...</div>}
                             {suggestions.map((suggestion) => {

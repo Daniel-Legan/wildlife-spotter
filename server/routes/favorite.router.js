@@ -5,11 +5,20 @@ const {
     rejectUnauthenticated,
 } = require('../modules/authentication-middleware');
 
-/**
- * GET route template
- */
-router.get('/', (req, res) => {
-    // GET route code here
+router.get('/:id', rejectUnauthenticated, (req, res) => {
+    const placeId = req.params.id;
+    const SQLText = `SELECT EXISTS(SELECT 1 FROM favorite WHERE user_id = $1 AND place_id = $2);`;
+
+    pool
+        .query(SQLText, [req.user.id, placeId])
+        .then(result => {
+            // result.rows[0] = { exists: true }
+            res.send(result.rows[0]);
+        })
+        .catch(err => {
+            console.log(err);
+            res.sendStatus(500);
+        })
 });
 
 router.post('/', rejectUnauthenticated, (req, res) => {
