@@ -19,6 +19,7 @@ function Map() {
     const [description, setDescription] = useState("");
     const [infoWindow, setInfoWindow] = useState(null);
     const [submit, setSubmit] = useState(false);
+    const [libraries] = useState(['places']);
 
     const favorite = useSelector((store) => store.favorite.isFavorite);
     const dispatch = useDispatch();
@@ -107,7 +108,7 @@ function Map() {
     return (
         <LoadScript
             googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
-            libraries={['places']}
+            libraries={libraries}
         >
             <PlacesAutocomplete
                 value={address}
