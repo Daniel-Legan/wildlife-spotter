@@ -6,7 +6,6 @@ import PlacesAutocomplete, {
 } from 'react-places-autocomplete';
 import { GoogleMap, Marker, InfoWindow, LoadScript } from '@react-google-maps/api';
 
-
 const mapContainerStyle = {
     width: '100%',
     height: '70vh',
@@ -161,6 +160,10 @@ function Map() {
                         <Marker
                             key={`${marker.lat}-${marker.lng}`}
                             position={{ lat: Number(marker.lat), lng: Number(marker.lng) }}
+                            icon={{
+                                url: '/svg/bear-black-shape-svgrepo-com.svg'
+                                // anchor and point needed
+                            }}
                             onClick={() => {
                                 setSelected(marker);
                             }}
