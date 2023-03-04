@@ -30,7 +30,8 @@ CREATE TABLE "animal" (
 CREATE TABLE "favorite" (
 	"id" serial PRIMARY KEY,
 	"user_id" int REFERENCES "user",
-	"name" VARCHAR,
+	"place_id" VARCHAR,
+	"address" VARCHAR,
 	"lat" DECIMAL(10, 7) NOT NULL,
 	"lng" DECIMAL(10, 7) NOT NULL
 	);

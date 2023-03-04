@@ -15,16 +15,19 @@ const mapContainerStyle = {
 function Map() {
     const [userLocation, setUserLocation] = useState(null);
     const [address, setAddress] = useState('');
-    const [markerData, setMarkerData] = useState(null);
     const [description, setDescription] = useState('');
-    const [infoWindow, setInfoWindow] = useState(null);
     const [submit, setSubmit] = useState(false);
     const [showMessage, setShowMessage] = useState(false);
+    const [selected, setSelected] = useState(null);
     const [libraries] = useState(['places']);
     const favorite = useSelector((store) => store.favorite.isFavorite);
+    const markers = useSelector((store) => store.markers.markers);
     const dispatch = useDispatch();
 
     useEffect(() => {
+        dispatch({
+            type: 'FETCH_MARKERS'
+        });
         navigator.geolocation.getCurrentPosition((position) => {
             const { latitude, longitude } = position.coords;
             setUserLocation({ lat: latitude, lng: longitude });
@@ -80,28 +83,25 @@ function Map() {
         setAddress(value);
     }, []);
 
-    const handleMarkerClick = () => {
-        setInfoWindow(markerData);
-    };
-
-    const handleInfoWindowClose = () => {
-        setInfoWindow(null);
-    };
-
     const handleSubmit = () => {
         setSubmit(true);
     }
 
     const handleCancel = () => {
         setSubmit(false);
-        setDescription("");
+        setDescription('');
     }
 
     const handleMapClick = (event) => {
-        if (description !== "" && submit === true) {
-            const newMarkerData = { lat: event.latLng.lat(), lng: event.latLng.lng(), description };
-            setMarkerData(newMarkerData);
-            setDescription("");
+        if (description !== '' && submit === true) {
+            const newMarkerData = { animalId: 1, lat: event.latLng.lat(), lng: event.latLng.lng(), description };
+            dispatch({
+                type: 'ADD_MARKER',
+                payload: {
+                    newMarkerData: newMarkerData
+                }
+            });
+            setDescription('');
             setSubmit(false);
         }
     };
@@ -156,19 +156,28 @@ function Map() {
                 zoom={13}
                 onClick={handleMapClick}
             >
-                {markerData && (
-                    <Marker
-                        position={markerData}
-                        onClick={handleMarkerClick}
-                    >
-                        {infoWindow === markerData && (
-                            <InfoWindow onCloseClick={handleInfoWindowClose}>
-                                <div>{markerData.description}</div>
-                            </InfoWindow>
-                        )}
-                    </Marker>
-                )}
+                {markers.length > 0 &&
+                    markers.map((marker) => (
+                        <Marker
+                            key={`${marker.lat}-${marker.lng}`}
+                            position={{ lat: Number(marker.lat), lng: Number(marker.lng) }}
+                            onClick={() => {
+                                setSelected(marker);
+                            }}
+                        >
+                            {selected === marker && (
+                                <InfoWindow
+                                    onCloseClick={() => {
+                                        setSelected(null);
+                                    }}
+                                >
+                                    <div>{marker.description}</div>
+                                </InfoWindow>
+                            )}
+                        </Marker>
+                    ))}
             </GoogleMap>
+
             {!submit ?
                 <form
                     onSubmit={handleSubmit}

@@ -1,13 +1,13 @@
 import { combineReducers } from 'redux';
 
-const isFavorite = (state = false, action) => {
+const markers = (state = [], action) => {
     switch (action.type) {
-        case 'SET_IS_FAVORITE':
+        case 'SET_MARKERS':
             return action.payload;
     }
     return state;
 }
 
 export default combineReducers({
-    isFavorite
+    markers
 });
