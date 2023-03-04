@@ -6,7 +6,12 @@ const {
 } = require('../modules/authentication-middleware');
 
 router.get('/', rejectUnauthenticated, (req, res) => {
-    const SQLText = `SELECT * FROM marker WHERE user_id = $1;`;
+    const SQLText = `   
+                        SELECT *
+                        FROM marker
+                        JOIN animal ON animal.id = marker.animal_id
+                        WHERE marker.user_id = $1;
+                    `;
 
     pool
         .query(SQLText, [req.user.id])
