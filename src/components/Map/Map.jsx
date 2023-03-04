@@ -16,11 +16,11 @@ function Map() {
     const [userLocation, setUserLocation] = useState(null);
     const [address, setAddress] = useState('');
     const [markerData, setMarkerData] = useState(null);
-    const [description, setDescription] = useState("");
+    const [description, setDescription] = useState('');
     const [infoWindow, setInfoWindow] = useState(null);
     const [submit, setSubmit] = useState(false);
+    const [showMessage, setShowMessage] = useState(false);
     const [libraries] = useState(['places']);
-
     const favorite = useSelector((store) => store.favorite.isFavorite);
     const dispatch = useDispatch();
 
@@ -69,6 +69,11 @@ function Map() {
                 lng: latLng.lng
             }
         });
+        setShowMessage(true);
+        setTimeout(() => {
+            setShowMessage(false);
+        }, 3000);
+        setAddress('');
     }, [address]);
 
     const handleChange = useCallback((value) => {
@@ -123,7 +128,9 @@ function Map() {
                                 className: 'location-search-input',
                             })}
                         />
-                        {!favorite ? <button onClick={handleSave}>Save</button> : null}
+                        {!favorite ? <button onClick={handleSave}>Save</button> : <p>Location is in your favorite list</p>}
+                        {/* {!favorite ? <button onClick={handleSave}>Save</button> : null} */}
+                        {showMessage && <p>Saved!</p>}
                         <div className="autocomplete-dropdown-container">
                             {loading && <div>Loading...</div>}
                             {suggestions.map((suggestion) => {
@@ -167,9 +174,9 @@ function Map() {
                     onSubmit={handleSubmit}
                 >
                     <div>
-                        <label>
+                        <label htmlFor="description">
                             Description:
-                            <input required type="text" value={description} onChange={handleDescriptionChange} />
+                            <input required type="text" name="description" placeholder="Enter Description..." value={description} onChange={handleDescriptionChange} />
                         </label>
                         <button>Save</button>
                     </div>
