@@ -13,36 +13,38 @@ const mapContainerStyle = {
 
 function Map() {
     const [userLocation, setUserLocation] = useState(null);
+    const [showUserMarker, setShowUserMarker] = useState(true);
     const [address, setAddress] = useState('');
     const [description, setDescription] = useState('');
+    const [animalId, setAnimalId] = useState('');
     const [submit, setSubmit] = useState(false);
     const [showMessage, setShowMessage] = useState(false);
     const [selected, setSelected] = useState(null);
     const [libraries] = useState(['places']);
     const favorite = useSelector((store) => store.favorite.isFavorite);
     const markers = useSelector((store) => store.markers.markers);
+    const animals = useSelector((store) => store.markers.animals);
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch({
             type: 'FETCH_MARKERS'
         });
-        navigator.geolocation.getCurrentPosition((position) => {
-            const { latitude, longitude } = position.coords;
-            setUserLocation({ lat: latitude, lng: longitude });
-            // map.panTo({ lat: latitude, lng: longitude });
-            // console.log("Latitude: " + latitude + ", Longitude: " + longitude);
+        dispatch({
+            type: 'FETCH_ANIMALS'
         });
-    }, []);
+        if (showUserMarker) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                const { latitude, longitude } = position.coords;
+                setUserLocation({ lat: latitude, lng: longitude });
+            });
+        }
+    }, [showUserMarker]);
 
     const handleSelect = useCallback(
         async (value) => {
-            // console.log(value); // suggested result clicked
             const results = await geocodeByAddress(value);
             const latLng = await getLatLng(results[0]);
-            // console.log(results[0].formatted_address);
-            // console.log(results[0].place_id);
-            // console.log(latLng);
             dispatch({
                 type: 'CHECK_PLACE_ID',
                 payload: {
@@ -58,10 +60,6 @@ function Map() {
     const handleSave = useCallback(async () => {
         const results = await geocodeByAddress(address);
         const latLng = await getLatLng(results[0]);
-        // console.log(address);
-        // console.log(results[0].formatted_address);
-        // console.log(results[0].place_id);
-        // console.log(latLng);
         dispatch({
             type: 'ADD_FAVORITE',
             payload: {
@@ -92,8 +90,8 @@ function Map() {
     }
 
     const handleMapClick = (event) => {
-        if (description !== '' && submit === true) {
-            const newMarkerData = { animalId: 1, lat: event.latLng.lat(), lng: event.latLng.lng(), description };
+        if (description !== '' && animalId !== '' && submit === true) {
+            const newMarkerData = { animalId: animalId, lat: event.latLng.lat(), lng: event.latLng.lng(), description };
             dispatch({
                 type: 'ADD_MARKER',
                 payload: {
@@ -101,6 +99,7 @@ function Map() {
                 }
             });
             setDescription('');
+            setAnimalId('');
             setSubmit(false);
         }
     };
@@ -149,12 +148,19 @@ function Map() {
                     </div>
                 )}
             </PlacesAutocomplete>
+            <button onClick={() => setShowUserMarker(!showUserMarker)}>
+                {showUserMarker ? 'Hide My Location' : 'Show My Location'}
+            </button>
             <GoogleMap
                 mapContainerStyle={mapContainerStyle}
                 center={userLocation || null}
                 zoom={13}
                 onClick={handleMapClick}
             >
+                {showUserMarker && userLocation && (
+                    <Marker position={userLocation} />
+                )}
+
                 {markers.length > 0 &&
                     markers.map((marker) => (
                         <Marker
@@ -182,14 +188,28 @@ function Map() {
             </GoogleMap>
 
             {!submit ?
-                <form
-                    onSubmit={handleSubmit}
-                >
+                <form onSubmit={handleSubmit}>
                     <div>
                         <label htmlFor="description">
                             Description:
-                            <input required type="text" name="description" placeholder="Enter Description..." value={description} onChange={handleDescriptionChange} />
+                            <input
+                                required
+                                type="text"
+                                name="description"
+                                placeholder="Enter Description..."
+                                value={description}
+                                onChange={handleDescriptionChange}
+                            />
                         </label>
+                        <label htmlFor="animal-select">Animal:</label>
+                        <select value={animalId} onChange={(event) => setAnimalId(event.target.value)}>
+                            <option value="">Select Animal</option>
+                            {animals.map((animal) => (
+                                <option key={animal.id} value={animal.id}>
+                                    {animal.animal}
+                                </option>
+                            ))}
+                        </select>
                         <button>Save</button>
                     </div>
                 </form>

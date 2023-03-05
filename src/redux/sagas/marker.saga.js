@@ -24,9 +24,22 @@ function* addMarker(action) {
     }
 }
 
+function* fetchAnimals() {
+    try {
+        const response = yield axios.get(`/api/marker/animals`);
+        yield put({
+            type: 'SET_ANIMALS',
+            payload: response.data
+        });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 function* markerSaga() {
     yield takeLatest('FETCH_MARKERS', fetchMarkers);
     yield takeLatest('ADD_MARKER', addMarker);
+    yield takeLatest('FETCH_ANIMALS', fetchAnimals);
 }
 
 export default markerSaga;

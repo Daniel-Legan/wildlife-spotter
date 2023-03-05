@@ -38,4 +38,18 @@ router.post('/', rejectUnauthenticated, (req, res) => {
         })
 });
 
+router.get('/animals', rejectUnauthenticated, (req, res) => {
+    const SQLText = `SELECT * from animal ORDER BY animal ASC;`;
+
+    pool
+        .query(SQLText)
+        .then(result => {
+            res.send(result.rows);
+        })
+        .catch(err => {
+            console.log(err);
+            res.sendStatus(500);
+        })
+});
+
 module.exports = router;
