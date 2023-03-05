@@ -161,8 +161,8 @@ function Map() {
                             key={`${marker.lat}-${marker.lng}`}
                             position={{ lat: Number(marker.lat), lng: Number(marker.lng) }}
                             icon={{
-                                url: '/svg/bear-black-shape-svgrepo-com.svg'
-                                // anchor and point needed
+                                url: '/svg/bear-black-shape-svgrepo-com.svg',
+                                scaledSize: { width: 20, height: 20 }
                             }}
                             onClick={() => {
                                 setSelected(marker);
