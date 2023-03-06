@@ -54,24 +54,25 @@ function Map() {
         []
     );
 
-    const handleSave = useCallback(async () => {
-        const results = await geocodeByAddress(address);
-        const latLng = await getLatLng(results[0]);
-        dispatch({
-            type: 'ADD_FAVORITE',
-            payload: {
-                placeId: results[0].place_id,
-                address: address,
-                lat: latLng.lat,
-                lng: latLng.lng
-            }
-        });
-        setShowMessage(true);
-        setTimeout(() => {
-            setShowMessage(false);
-        }, 3000);
-        setAddress('');
-    }, [address]);
+    const handleSave = useCallback(
+        async () => {
+            const results = await geocodeByAddress(address);
+            const latLng = await getLatLng(results[0]);
+            dispatch({
+                type: 'ADD_FAVORITE',
+                payload: {
+                    placeId: results[0].place_id,
+                    address: address,
+                    lat: latLng.lat,
+                    lng: latLng.lng
+                }
+            });
+            setShowMessage(true);
+            setTimeout(() => {
+                setShowMessage(false);
+            }, 3000);
+            setAddress('');
+        }, [address]);
 
     const handleChange = useCallback((value) => {
         setAddress(value);
