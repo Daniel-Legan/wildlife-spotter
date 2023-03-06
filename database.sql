@@ -1,9 +1,9 @@
 -- Database Name: wildlife_spotter
 
-DROP TABLE IF EXISTS "user";
-DROP TABLE IF EXISTS "marker";
-DROP TABLE IF EXISTS "animal";
-DROP TABLE IF EXISTS "favorite";
+DROP TABLE IF EXISTS "favorite" CASCADE;
+DROP TABLE IF EXISTS "marker" CASCADE;
+DROP TABLE IF EXISTS "animal" CASCADE;
+DROP TABLE IF EXISTS "user" CASCADE;
 
 CREATE TABLE "user" (
 	"id" serial PRIMARY KEY,
@@ -23,8 +23,7 @@ CREATE TABLE "marker" (
 	
 CREATE TABLE "animal" (
 	"id" serial PRIMARY KEY,
-	"animal" VARCHAR (255) UNIQUE NOT NULL,
-	"img" VARCHAR (255) UNIQUE NOT NULL
+	"animal" VARCHAR (255) UNIQUE NOT NULL
 	);
 	
 CREATE TABLE "favorite" (

@@ -13,7 +13,6 @@ const mapContainerStyle = {
 
 function Map() {
     const [userLocation, setUserLocation] = useState(null);
-    const [showUserMarker, setShowUserMarker] = useState(true);
     const [address, setAddress] = useState('');
     const [description, setDescription] = useState('');
     const [animalId, setAnimalId] = useState('');
@@ -33,13 +32,11 @@ function Map() {
         dispatch({
             type: 'FETCH_ANIMALS'
         });
-        if (showUserMarker) {
-            navigator.geolocation.getCurrentPosition((position) => {
-                const { latitude, longitude } = position.coords;
-                setUserLocation({ lat: latitude, lng: longitude });
-            });
-        }
-    }, [showUserMarker]);
+        navigator.geolocation.getCurrentPosition((position) => {
+            const { latitude, longitude } = position.coords;
+            setUserLocation({ lat: latitude, lng: longitude });
+        });
+    }, []);
 
     const handleSelect = useCallback(
         async (value) => {
@@ -148,43 +145,53 @@ function Map() {
                     </div>
                 )}
             </PlacesAutocomplete>
-            <button onClick={() => setShowUserMarker(!showUserMarker)}>
-                {showUserMarker ? 'Hide My Location' : 'Show My Location'}
-            </button>
             <GoogleMap
                 mapContainerStyle={mapContainerStyle}
                 center={userLocation || null}
                 zoom={13}
                 onClick={handleMapClick}
             >
-                {showUserMarker && userLocation && (
-                    <Marker position={userLocation} />
-                )}
-
                 {markers.length > 0 &&
-                    markers.map((marker) => (
-                        <Marker
-                            key={`${marker.lat}-${marker.lng}`}
-                            position={{ lat: Number(marker.lat), lng: Number(marker.lng) }}
-                            icon={{
-                                url: '/svg/bear-black-shape-svgrepo-com.svg',
-                                scaledSize: { width: 20, height: 20 }
-                            }}
-                            onClick={() => {
-                                setSelected(marker);
-                            }}
-                        >
-                            {selected === marker && (
-                                <InfoWindow
-                                    onCloseClick={() => {
-                                        setSelected(null);
-                                    }}
-                                >
-                                    <div>{marker.description}</div>
-                                </InfoWindow>
-                            )}
-                        </Marker>
-                    ))}
+                    markers.map((marker) => {
+                        let iconUrl;
+                        switch (marker.animal_id) {
+                            case 1:
+                                iconUrl = '/svg/bear-black-shape-svgrepo-com.svg';
+                                break;
+                            case 2:
+                                iconUrl = '/svg/moose-shape-svgrepo-com.svg';
+                                break;
+                            case 3:
+                                iconUrl = '/svg/squirrel-shape-svgrepo-com.svg';
+                                break;
+                            default:
+                                iconUrl = null;
+                                break;
+                        }
+                        return (
+                            <Marker
+                                key={`${marker.lat}-${marker.lng}`}
+                                position={{ lat: Number(marker.lat), lng: Number(marker.lng) }}
+                                icon={{
+                                    url: iconUrl,
+                                    scaledSize: { width: 20, height: 20 }
+                                }}
+                                onClick={() => {
+                                    setSelected(marker);
+                                }}
+                            >
+                                {selected === marker && (
+                                    <InfoWindow
+                                        onCloseClick={() => {
+                                            setSelected(null);
+                                        }}
+                                    >
+                                        <div>{marker.description}</div>
+                                    </InfoWindow>
+                                )}
+                            </Marker>
+                        );
+                    })}
             </GoogleMap>
 
             {!submit ?
