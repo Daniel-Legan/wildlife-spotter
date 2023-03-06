@@ -85,6 +85,7 @@ function Map() {
     const handleCancel = () => {
         setSubmit(false);
         setDescription('');
+        setAnimalId('');
     }
 
     const handleMapClick = (event) => {
@@ -210,8 +211,8 @@ function Map() {
                             />
                         </label>
                         <label htmlFor="animal-select">Animal:</label>
-                        <select value={animalId} onChange={(event) => setAnimalId(event.target.value)}>
-                            <option value="">Select Animal</option>
+                        <select value={animalId} onChange={(event) => setAnimalId(event.target.value)} required>
+                            <option value="" disabled>Select Animal</option>
                             {animals.map((animal) => (
                                 <option key={animal.id} value={animal.id}>
                                     {animal.animal}
