@@ -11,13 +11,33 @@ const mapContainerStyle = {
     height: '70vh',
 };
 
+const mapStyles = [
+    {
+        featureType: "poi",
+        elementType: "labels",
+        stylers: [
+            {
+                visibility: "off"
+            }
+        ]
+    },
+    {
+        featureType: "poi.park",
+        elementType: "labels",
+        stylers: [
+            {
+                visibility: "on"
+            }
+        ]
+    }
+];
+
 function Map() {
     const [userLocation, setUserLocation] = useState(null);
     const [address, setAddress] = useState('');
     const [description, setDescription] = useState('');
     const [animalId, setAnimalId] = useState('');
     const [submit, setSubmit] = useState(false);
-    const [showMessage, setShowMessage] = useState(false);
     const [selected, setSelected] = useState(null);
     const [libraries] = useState(['places']);
     const favorite = useSelector((store) => store.favorite.isFavorite);
@@ -67,19 +87,19 @@ function Map() {
                     lng: latLng.lng
                 }
             });
-            setAddress('');
+            // setAddress('');
         }, [address]);
 
-    const handleUnsaveFavorite = useCallback(
+    const handleRemoveFavorite = useCallback(
         async () => {
             const results = await geocodeByAddress(address);
             dispatch({
                 type: 'DELETE_FAVORITE',
                 payload: {
-                    placeId: results[0].place_id,
+                    placeId: results[0].place_id
                 }
             });
-            setAddress('');
+            // setAddress('');
         }, [address]);
 
     const handleChange = useCallback((value) => {
@@ -88,13 +108,13 @@ function Map() {
 
     const handleSubmit = () => {
         setSubmit(true);
-    }
+    };
 
     const handleCancel = () => {
         setSubmit(false);
         setDescription('');
         setAnimalId('');
-    }
+    };
 
     const handleMapClick = (event) => {
         if (description !== '' && animalId !== '' && submit === true) {
@@ -124,6 +144,9 @@ function Map() {
                 value={address}
                 onSelect={handleSelect}
                 onChange={handleChange}
+                searchOptions={{
+                    types: ['park']
+                }}
             >
                 {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
                     <div>
@@ -133,9 +156,8 @@ function Map() {
                                 className: 'location-search-input',
                             })}
                         />
-                        {!favorite ? <button onClick={handleSaveFavorite}>Save</button> : <button onClick={handleUnsaveFavorite}>Unsave</button>}
+                        {!favorite ? <button onClick={handleSaveFavorite}>Save Location to Favorites</button> : <button onClick={handleRemoveFavorite}>Remove Location from Favorites</button>}
                         {/* {!favorite ? <button onClick={handleSave}>Save</button> : null} */}
-                        {showMessage && <p>Saved!</p>}
                         <div className="autocomplete-dropdown-container">
                             {loading && <div>Loading...</div>}
                             {suggestions.map((suggestion) => {
@@ -157,9 +179,19 @@ function Map() {
             </PlacesAutocomplete>
             <GoogleMap
                 mapContainerStyle={mapContainerStyle}
+
                 center={userLocation || null}
                 zoom={13}
                 onClick={handleMapClick}
+                options={{
+                    mapTypeId: 'terrain',
+                    streetViewControl: false,
+                    clickableIcons: false,
+                    styles: mapStyles,
+                    zoomControlOptions: {
+                        position: 9
+                    }
+                }}
             >
                 {markers.length > 0 &&
                     markers.map((marker) => {
@@ -227,12 +259,12 @@ function Map() {
                                 </option>
                             ))}
                         </select>
-                        <button>Save</button>
+                        <button>Add Marker</button>
                     </div>
                 </form>
                 :
                 <div>
-                    <p>Click on map to add marker</p>
+                    <p>CLICK ON MAP TO ADD MARKER</p>
                     <button onClick={handleCancel}>Cancel</button>
                 </div>
             }

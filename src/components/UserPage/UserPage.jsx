@@ -1,7 +1,6 @@
 import React from 'react';
 import LogOutButton from '../LogOutButton/LogOutButton';
 import { useSelector } from 'react-redux';
-import MapContainer from '../MapContainer/MapContainer';
 import Map from '../Map/Map';
 
 function UserPage() {
@@ -9,11 +8,10 @@ function UserPage() {
   const user = useSelector((store) => store.user);
   return (
     <div className="container">
-      <h2>Welcome, {user.username}!</h2>
-      <p>Your ID is: {user.id}</p>
+      {/* <h2>Welcome, {user.username}!</h2> */}
+      {/* <p>Your ID is: {user.id}</p> */}
 
-      <LogOutButton className="btn" />
-      {/* <MapContainer /> */}
+      {/* <LogOutButton className="btn" /> */}
       <Map />
     </div>
   );

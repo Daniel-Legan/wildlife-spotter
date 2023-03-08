@@ -2,11 +2,10 @@ import axios from 'axios';
 import { put, takeLatest } from 'redux-saga/effects';
 
 function* addFavorite(action) {
-    console.log(action.payload);
     try {
         yield axios.post('/api/favorite', action.payload);
         
-        yield put({ type: 'CHECK_PLACE_ID', payload: action.payload.placeId });
+        yield put({ type: 'CHECK_PLACE_ID', payload: action.payload });
 
     } catch (error) {
         console.log(error);
