@@ -54,7 +54,7 @@ function Map() {
         []
     );
 
-    const handleSave = useCallback(
+    const handleSaveFavorite = useCallback(
         async () => {
             const results = await geocodeByAddress(address);
             const latLng = await getLatLng(results[0]);
@@ -67,10 +67,18 @@ function Map() {
                     lng: latLng.lng
                 }
             });
-            setShowMessage(true);
-            setTimeout(() => {
-                setShowMessage(false);
-            }, 3000);
+            setAddress('');
+        }, [address]);
+
+    const handleUnsaveFavorite = useCallback(
+        async () => {
+            const results = await geocodeByAddress(address);
+            dispatch({
+                type: 'DELETE_FAVORITE',
+                payload: {
+                    placeId: results[0].place_id,
+                }
+            });
             setAddress('');
         }, [address]);
 
@@ -125,7 +133,7 @@ function Map() {
                                 className: 'location-search-input',
                             })}
                         />
-                        {!favorite ? <button onClick={handleSave}>Save</button> : <p>Location is in your favorite list</p>}
+                        {!favorite ? <button onClick={handleSaveFavorite}>Save</button> : <button onClick={handleUnsaveFavorite}>Unsave</button>}
                         {/* {!favorite ? <button onClick={handleSave}>Save</button> : null} */}
                         {showMessage && <p>Saved!</p>}
                         <div className="autocomplete-dropdown-container">

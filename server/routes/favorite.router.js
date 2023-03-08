@@ -35,4 +35,19 @@ router.post('/', rejectUnauthenticated, (req, res) => {
         })
 });
 
+router.delete('/:id', rejectUnauthenticated, (req, res) => {
+    const placeId = req.params.id;
+    const SQLText = `DELETE FROM favorite WHERE user_id = $1 AND place_id = $2;`;
+
+    pool
+        .query(SQLText, [req.user.id, placeId])
+        .then(() =>
+            res.sendStatus(201)
+        )
+        .catch(err => {
+            console.log(err);
+            res.sendStatus(500);
+        })
+});
+
 module.exports = router;
