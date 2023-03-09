@@ -116,6 +116,13 @@ function Map() {
         setAnimalId('');
     };
 
+    const handleUserLocation = useCallback(() => {
+        navigator.geolocation.getCurrentPosition((position) => {
+            const { latitude, longitude } = position.coords;
+            setUserLocation({ lat: latitude, lng: longitude });
+        });
+    }, []);
+
     const handleMapClick = (event) => {
         if (description !== '' && animalId !== '' && submit === true) {
             const newMarkerData = { animalId: animalId, lat: event.latLng.lat(), lng: event.latLng.lng(), description };
@@ -140,6 +147,7 @@ function Map() {
             googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
             libraries={libraries}
         >
+            <button onClick={handleUserLocation}>My Location</button>
             <PlacesAutocomplete
                 value={address}
                 onSelect={handleSelect}
@@ -157,26 +165,28 @@ function Map() {
                             })}
                         />
                         {!favorite ? <button onClick={handleSaveFavorite}>Save Location to Favorites</button> : <button onClick={handleRemoveFavorite}>Remove Location from Favorites</button>}
-                        {/* {!favorite ? <button onClick={handleSave}>Save</button> : null} */}
-                        <div className="autocomplete-dropdown-container">
-                            {loading && <div>Loading...</div>}
-                            {suggestions.map((suggestion) => {
-                                const style = suggestion.active
-                                    ? { backgroundColor: '#fafafa', cursor: 'pointer' }
-                                    : { backgroundColor: '#ffffff', cursor: 'pointer' };
-                                return (
-                                    <div
-                                        {...getSuggestionItemProps(suggestion, { style })}
-                                        key={suggestion.placeId}
-                                    >
-                                        <span>{suggestion.description}</span>
-                                    </div>
-                                );
-                            })}
-                        </div>
+                        {suggestions.length > 0 && (
+                            <div className="autocomplete-dropdown-container">
+                                {loading && <div>Loading...</div>}
+                                {suggestions.map((suggestion) => {
+                                    const style = suggestion.active
+                                        ? { backgroundColor: '#fafafa', cursor: 'pointer' }
+                                        : { backgroundColor: '#ffffff', cursor: 'pointer' };
+                                    return (
+                                        <div
+                                            {...getSuggestionItemProps(suggestion, { style })}
+                                            key={suggestion.placeId}
+                                        >
+                                            <span>{suggestion.description}</span>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        )}
                     </div>
                 )}
             </PlacesAutocomplete>
+
             <GoogleMap
                 mapContainerStyle={mapContainerStyle}
 
