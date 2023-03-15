@@ -87,6 +87,7 @@ function Map() {
                     lng: latLng.lng
                 }
             });
+            
             // setAddress('');
         }, [address]);
 
@@ -99,6 +100,7 @@ function Map() {
                     placeId: results[0].place_id
                 }
             });
+
             // setAddress('');
         }, [address]);
 
