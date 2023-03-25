@@ -34,7 +34,7 @@ function* checkPlaceId(action) {
     }
 }
 
-function* fetchFavorites(action) {
+function* fetchFavorites() {
     try {
         const result = yield axios.get(`/api/favorite/`);
 

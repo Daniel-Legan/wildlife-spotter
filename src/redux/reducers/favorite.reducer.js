@@ -8,7 +8,7 @@ const isFavorite = (state = false, action) => {
     return state;
 }
 
-const favorites = (state = {}, action) => {
+const favorites = (state = null, action) => {
     switch (action.type) {
         case 'SET_FAVORITES':
             return action.payload;

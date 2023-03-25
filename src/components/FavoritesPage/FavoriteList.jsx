@@ -15,7 +15,8 @@ function FavoriteList() {
     return (
         <main>
             <section>
-                {favorites.length >= 0 &&
+                {/* favorites is not null nor undefined */}
+                {favorites &&
                     favorites.map(item => {
                         return (
                             <FavoriteItem key={item.id} item={item} />
