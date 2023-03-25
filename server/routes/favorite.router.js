@@ -50,4 +50,18 @@ router.delete('/:id', rejectUnauthenticated, (req, res) => {
         })
 });
 
+router.get('/', rejectUnauthenticated, (req, res) => {
+    const SQLText = `SELECT * FROM favorite WHERE user_id = $1;`;
+
+    pool
+        .query(SQLText, [req.user.id])
+        .then(result => {
+            res.send(result.rows);
+        })
+        .catch(err => {
+            console.log(err);
+            res.sendStatus(500);
+        })
+});
+
 module.exports = router;

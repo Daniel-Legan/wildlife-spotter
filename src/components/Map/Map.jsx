@@ -5,6 +5,8 @@ import PlacesAutocomplete, {
     getLatLng,
 } from 'react-places-autocomplete';
 import { GoogleMap, Marker, InfoWindow, LoadScript } from '@react-google-maps/api';
+import ListItem from '../FavoritesPage/FavoriteItem';
+import FavoriteList from '../FavoritesPage/FavoriteList';
 
 const mapContainerStyle = {
     width: '100%',

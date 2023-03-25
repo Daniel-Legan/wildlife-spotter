@@ -34,10 +34,22 @@ function* checkPlaceId(action) {
     }
 }
 
+function* fetchFavorites(action) {
+    try {
+        const result = yield axios.get(`/api/favorite/`);
+
+        yield put({ type: 'SET_FAVORITES', payload: result.data });
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 function* favoriteSaga() {
     yield takeLatest('ADD_FAVORITE', addFavorite);
     yield takeLatest('DELETE_FAVORITE', deleteFavorite);
     yield takeLatest('CHECK_PLACE_ID', checkPlaceId);
+    yield takeLatest('FETCH_FAVORITES', fetchFavorites);
 }
 
 export default favoriteSaga;

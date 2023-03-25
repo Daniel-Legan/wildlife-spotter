@@ -8,6 +8,15 @@ const isFavorite = (state = false, action) => {
     return state;
 }
 
+const favorites = (state = {}, action) => {
+    switch (action.type) {
+        case 'SET_FAVORITES':
+            return action.payload;
+    }
+    return state;
+}
+
 export default combineReducers({
-    isFavorite
+    isFavorite,
+    favorites
 });
