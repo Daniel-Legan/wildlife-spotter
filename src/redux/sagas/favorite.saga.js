@@ -17,6 +17,7 @@ function* deleteFavorite(action) {
         yield axios.delete(`/api/favorite/${action.payload.placeId}`);
 
         yield put({ type: 'CHECK_PLACE_ID', payload: action.payload.placeId });
+        yield put({ type: 'FETCH_FAVORITES' });
 
     } catch (error) {
         console.log(error);
