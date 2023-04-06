@@ -5,8 +5,6 @@ import PlacesAutocomplete, {
     getLatLng,
 } from 'react-places-autocomplete';
 import { GoogleMap, Marker, InfoWindow, LoadScript } from '@react-google-maps/api';
-import ListItem from '../FavoritesPage/FavoriteItem';
-import FavoriteList from '../FavoritesPage/FavoriteList';
 
 const mapContainerStyle = {
     width: '100%',
@@ -43,9 +41,12 @@ function Map() {
     const [selected, setSelected] = useState(null);
     const [libraries] = useState(['places']);
     const favorite = useSelector((store) => store.favorite.isFavorite);
+    const centerFavorite = useSelector((store) => store.favorite.centerFavorite);
     const markers = useSelector((store) => store.markers.markers);
     const animals = useSelector((store) => store.markers.animals);
     const dispatch = useDispatch();
+
+    console.log(centerFavorite);
 
     useEffect(() => {
         dispatch({
@@ -54,10 +55,14 @@ function Map() {
         dispatch({
             type: 'FETCH_ANIMALS'
         });
-        navigator.geolocation.getCurrentPosition((position) => {
-            const { latitude, longitude } = position.coords;
-            setUserLocation({ lat: latitude, lng: longitude });
-        });
+        if (centerFavorite === null) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                const { latitude, longitude } = position.coords;
+                setUserLocation({ lat: latitude, lng: longitude });
+            });
+        } else {
+            setUserLocation({ lat: Number(centerFavorite.lat), lng: Number(centerFavorite.lng) });
+        }
     }, []);
 
     const handleSelect = useCallback(

@@ -16,7 +16,16 @@ const favorites = (state = null, action) => {
     return state;
 }
 
+const centerFavorite = (state = null, action) => {
+    switch (action.type) {
+        case 'SET_CENTER_FAVORITE':
+            return action.payload;
+    }
+    return state;
+}
+
 export default combineReducers({
     isFavorite,
-    favorites
+    favorites,
+    centerFavorite
 });

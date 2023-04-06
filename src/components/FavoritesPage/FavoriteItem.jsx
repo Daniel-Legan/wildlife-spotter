@@ -1,8 +1,10 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 function FavoriteItem({ item }) {
     const dispatch = useDispatch();
+    const history = useHistory();
 
     const handleDelete = () => {
         dispatch({
@@ -13,8 +15,16 @@ function FavoriteItem({ item }) {
         });
     };
 
+    const handleLocation = () => {
+        dispatch({
+            type: 'SET_CENTER_FAVORITE',
+            payload: item
+        });
+        history.push('/user');
+    };
+
     return (
-        <li>
+        <li onClick={handleLocation}>
             {item.address}
             <button onClick={handleDelete}>Delete</button>
         </li>
