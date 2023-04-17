@@ -225,6 +225,84 @@ function Map() {
                             case 3:
                                 iconUrl = '/svg/squirrel-shape-svgrepo-com.svg';
                                 break;
+                            case 4:
+                                iconUrl = '/svg/bird-crane-shape-svgrepo-com.svg';
+                                break;
+                            case 5:
+                                iconUrl = '/svg/bird-osprey-shape-svgrepo-com.svg';
+                                break;
+                            case 6:
+                                iconUrl = '/svg/bird-plover-side-shape-svgrepo-com.svg';
+                                break;
+                            case 7:
+                                iconUrl = '/svg/bird-shape-svgrepo-com.svg';
+                                break;
+                            case 8:
+                                iconUrl = '/svg/buffalo-wild-beast-silhouette-svgrepo-com.svg';
+                                break;
+                            case 9:
+                                iconUrl = '/svg/deer-shape-svgrepo-com.svg';
+                                break;
+                            case 10:
+                                iconUrl = '/svg/echidna-mammal-animal-side-view-shape-svgrepo-com.svg';
+                                break;
+                            case 10:
+                                iconUrl = '/svg/echidna-mammal-animal-side-view-shape-svgrepo-com.svg';
+                                break;
+                            case 11:
+                                iconUrl = '/svg/fox-shape-svgrepo-com.svg';
+                                break;
+                            case 12:
+                                iconUrl = '/svg/frog-shape-svgrepo-com.svg';
+                                break;
+                            case 13:
+                                iconUrl = '/svg/gull-bird-flying-shape-svgrepo-com.svg';
+                                break;
+                            case 14:
+                                iconUrl = '/svg/horse-black-shape-svgrepo-com.svg';
+                                break;
+                            case 15:
+                                iconUrl = '/svg/mammal-animal-shape-of-a-platypus-svgrepo-com.svg';
+                                break;
+                            case 16:
+                                iconUrl = '/svg/mouse-mammal-animal-shape-svgrepo-com.svg';
+                                break;
+                            case 17:
+                                iconUrl = '/svg/opossum-mammal-animal-silhouette-svgrepo-com.svg';
+                                break;
+                            case 18:
+                                iconUrl = '/svg/owl-bird-shape-svgrepo-com.svg';
+                                break;
+                            case 19:
+                                iconUrl = '/svg/pigeon-bird-shape-svgrepo-com.svg';
+                                break;
+                            case 20:
+                                iconUrl = '/svg/prairie-dog-silhouette-svgrepo-com.svg';
+                                break;
+                            case 21:
+                                iconUrl = '/svg/quail-bird-shape-svgrepo-com.svg';
+                                break;
+                            case 22:
+                                iconUrl = '/svg/rabbit-shape-svgrepo-com.svg';
+                                break;
+                            case 23:
+                                iconUrl = '/svg/running-dog-silhouette-svgrepo-com.svg';
+                                break;
+                            case 24:
+                                iconUrl = '/svg/slug-shape-svgrepo-com.svg';
+                                break;
+                            case 25:
+                                iconUrl = '/svg/snake-svgrepo-com.svg';
+                                break;
+                            case 26:
+                                iconUrl = '/svg/sphinx-top-view-silhouette-svgrepo-com.svg';
+                                break;
+                            case 27:
+                                iconUrl = '/svg/turkey-bird-shape-from-side-view-svgrepo-com.svg';
+                                break;
+                            case 28:
+                                iconUrl = '/svg/turtle-silhouette-svgrepo-com.svg';
+                                break;
                             default:
                                 iconUrl = null;
                                 break;
