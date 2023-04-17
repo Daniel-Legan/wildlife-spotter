@@ -39,14 +39,13 @@ function Map() {
     const [animalId, setAnimalId] = useState('');
     const [submit, setSubmit] = useState(false);
     const [selected, setSelected] = useState(null);
+    const [placeSelected, setPlaceSelected] = useState(false);
     const [libraries] = useState(['places']);
-    const favorite = useSelector((store) => store.favorite.isFavorite);
+    const isFavorite = useSelector((store) => store.favorite.isFavorite);
     const centerFavorite = useSelector((store) => store.favorite.centerFavorite);
     const markers = useSelector((store) => store.markers.markers);
     const animals = useSelector((store) => store.markers.animals);
     const dispatch = useDispatch();
-
-    console.log(centerFavorite);
 
     useEffect(() => {
         dispatch({
@@ -75,6 +74,7 @@ function Map() {
                     placeId: results[0].place_id
                 }
             });
+            setPlaceSelected(true);
             setAddress(value);
             setUserLocation(latLng);
         },
@@ -173,7 +173,7 @@ function Map() {
                                 className: 'location-search-input',
                             })}
                         />
-                        {!favorite ? <button onClick={handleSaveFavorite}>Save Location to Favorites</button> : <button onClick={handleRemoveFavorite}>Remove Location from Favorites</button>}
+                        {!isFavorite && placeSelected && <button onClick={handleSaveFavorite}>Save Location to Favorites</button>}
                         {suggestions.length > 0 && (
                             <div className="autocomplete-dropdown-container">
                                 {loading && <div>Loading...</div>}
@@ -195,6 +195,8 @@ function Map() {
                     </div>
                 )}
             </PlacesAutocomplete>
+
+            {/* {!isFavorite ? <button onClick={handleSaveFavorite}>Save Location to Favorites</button> : <button onClick={handleRemoveFavorite}>Remove Location from Favorites</button>} */}
 
             <GoogleMap
                 mapContainerStyle={mapContainerStyle}
