@@ -35,6 +35,7 @@ const mapStyles = [
 function Map() {
     const [userLocation, setUserLocation] = useState(null);
     const [address, setAddress] = useState('');
+    const [addressToSave, setAddressToSave] = useState('');
     const [description, setDescription] = useState('');
     const [animalId, setAnimalId] = useState('');
     const [submit, setSubmit] = useState(false);
@@ -75,41 +76,42 @@ function Map() {
                 }
             });
             setPlaceSelected(true);
-            setAddress(value);
+            setAddressToSave(value)
+            setAddress('');
             setUserLocation(latLng);
         },
         []
     );
+    
 
     const handleSaveFavorite = useCallback(
         async () => {
-            const results = await geocodeByAddress(address);
+            const results = await geocodeByAddress(addressToSave);
             const latLng = await getLatLng(results[0]);
             dispatch({
                 type: 'ADD_FAVORITE',
                 payload: {
                     placeId: results[0].place_id,
-                    address: address,
+                    address: addressToSave,
                     lat: latLng.lat,
                     lng: latLng.lng
                 }
             });
             
-            // setAddress('');
-        }, [address]);
+            setAddress('');
+        }, [addressToSave]);
 
     const handleRemoveFavorite = useCallback(
         async () => {
-            const results = await geocodeByAddress(address);
+            const results = await geocodeByAddress(addressToSave);
             dispatch({
                 type: 'DELETE_FAVORITE',
                 payload: {
                     placeId: results[0].place_id
                 }
             });
-
             // setAddress('');
-        }, [address]);
+        }, [addressToSave]);
 
     const handleChange = useCallback((value) => {
         setAddress(value);
@@ -174,6 +176,8 @@ function Map() {
                             })}
                         />
                         {!isFavorite && placeSelected && <button onClick={handleSaveFavorite}>Save Location to Favorites</button>}
+                        {isFavorite && placeSelected && <button onClick={handleRemoveFavorite}>Remove Location from Favorites</button>}
+                        <p>{addressToSave}</p>
                         {suggestions.length > 0 && (
                             <div className="autocomplete-dropdown-container">
                                 {loading && <div>Loading...</div>}

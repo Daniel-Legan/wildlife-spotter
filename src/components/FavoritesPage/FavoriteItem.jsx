@@ -27,7 +27,6 @@ function FavoriteItem({ item }) {
         <>
             <li onClick={handleLocation}>
                 {item.address}
-
             </li>
             <button onClick={handleDelete}>Delete</button>
         </>
