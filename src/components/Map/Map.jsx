@@ -32,6 +32,8 @@ const mapStyles = [
     }
 ];
 
+// TO-DO: Show the address from the Favorite List and ADD/REMOVE
+
 function Map() {
     const [userLocation, setUserLocation] = useState(null);
     const [address, setAddress] = useState('');
