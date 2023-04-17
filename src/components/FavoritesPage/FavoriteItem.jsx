@@ -24,10 +24,13 @@ function FavoriteItem({ item }) {
     };
 
     return (
-        <li onClick={handleLocation}>
-            {item.address}
+        <>
+            <li onClick={handleLocation}>
+                {item.address}
+
+            </li>
             <button onClick={handleDelete}>Delete</button>
-        </li>
+        </>
     );
 }
 
