@@ -37,12 +37,13 @@ const mapStyles = [
 function Map() {
     const [userLocation, setUserLocation] = useState(null);
     const [address, setAddress] = useState('');
-    const [addressToSave, setAddressToSave] = useState('');
+    const [addressToSaveDelete, setAddressToSaveDelete] = useState('');
     const [description, setDescription] = useState('');
     const [animalId, setAnimalId] = useState('');
     const [submit, setSubmit] = useState(false);
     const [selected, setSelected] = useState(null);
     const [placeSelected, setPlaceSelected] = useState(false);
+    const [showUserLocation, setShowUserLocation] = useState(false);
     const [libraries] = useState(['places']);
     const isFavorite = useSelector((store) => store.favorite.isFavorite);
     const centerFavorite = useSelector((store) => store.favorite.centerFavorite);
@@ -67,6 +68,10 @@ function Map() {
         }
     }, []);
 
+    const handleShowUserLocation = () => {
+        setShowUserLocation(!showUserLocation);
+    };
+
     const handleSelect = useCallback(
         async (value) => {
             const results = await geocodeByAddress(value);
@@ -78,34 +83,34 @@ function Map() {
                 }
             });
             setPlaceSelected(true);
-            setAddressToSave(value)
+            setAddressToSaveDelete(value)
             setAddress('');
             setUserLocation(latLng);
         },
         []
     );
-    
+
 
     const handleSaveFavorite = useCallback(
         async () => {
-            const results = await geocodeByAddress(addressToSave);
+            const results = await geocodeByAddress(addressToSaveDelete);
             const latLng = await getLatLng(results[0]);
             dispatch({
                 type: 'ADD_FAVORITE',
                 payload: {
                     placeId: results[0].place_id,
-                    address: addressToSave,
+                    address: addressToSaveDelete,
                     lat: latLng.lat,
                     lng: latLng.lng
                 }
             });
-            
+
             setAddress('');
-        }, [addressToSave]);
+        }, [addressToSaveDelete]);
 
     const handleRemoveFavorite = useCallback(
         async () => {
-            const results = await geocodeByAddress(addressToSave);
+            const results = await geocodeByAddress(addressToSaveDelete);
             dispatch({
                 type: 'DELETE_FAVORITE',
                 payload: {
@@ -113,7 +118,7 @@ function Map() {
                 }
             });
             // setAddress('');
-        }, [addressToSave]);
+        }, [addressToSaveDelete]);
 
     const handleChange = useCallback((value) => {
         setAddress(value);
@@ -160,7 +165,10 @@ function Map() {
             googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
             libraries={libraries}
         >
-            <button onClick={handleUserLocation}>My Location</button>
+            <button onClick={handleUserLocation}>Go to My Location</button>
+            <button onClick={handleShowUserLocation}>
+                {showUserLocation ? 'Hide' : 'Show'} User Location
+            </button>
             <PlacesAutocomplete
                 value={address}
                 onSelect={handleSelect}
@@ -179,7 +187,7 @@ function Map() {
                         />
                         {!isFavorite && placeSelected && <button onClick={handleSaveFavorite}>Save Location to Favorites</button>}
                         {isFavorite && placeSelected && <button onClick={handleRemoveFavorite}>Remove Location from Favorites</button>}
-                        <p>{addressToSave}</p>
+                        <p>{addressToSaveDelete}</p>
                         {suggestions.length > 0 && (
                             <div className="autocomplete-dropdown-container">
                                 {loading && <div>Loading...</div>}
@@ -339,6 +347,12 @@ function Map() {
                             </Marker>
                         );
                     })}
+                {showUserLocation &&
+                    <Marker
+                        position={userLocation}
+                    >
+                    </Marker>
+                }
             </GoogleMap>
 
             {!submit ?
