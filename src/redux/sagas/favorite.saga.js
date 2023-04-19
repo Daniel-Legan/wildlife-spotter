@@ -6,6 +6,7 @@ function* addFavorite(action) {
         yield axios.post('/api/favorite', action.payload);
         
         yield put({ type: 'CHECK_PLACE_ID', payload: action.payload });
+        yield put({ type: 'FETCH_FAVORITES' });
 
     } catch (error) {
         console.log(error);

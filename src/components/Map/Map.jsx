@@ -175,7 +175,7 @@ function Map() {
         >
             <button onClick={handleUserLocation}>Go to My Location</button>
             <button onClick={handleShowUserLocation}>
-                {showUserLocation ? 'Hide' : 'Show'} User Location
+                {showUserLocation ? 'Hide' : 'Show'} My Location
             </button>
             <PlacesAutocomplete
                 value={address}
@@ -195,7 +195,9 @@ function Map() {
                         />
                         {!isFavorite && placeSelected && <button onClick={handleSaveFavorite}>Save Location to Favorites</button>}
                         {isFavorite && placeSelected && <button onClick={handleRemoveFavorite}>Remove Location from Favorites</button>}
-                        <p>{addressToSaveDelete}</p>
+                        {placeSelected &&
+                            <p>{addressToSaveDelete}</p>
+                        }
                         {suggestions.length > 0 && (
                             <div className="autocomplete-dropdown-container">
                                 {loading && <div>Loading...</div>}
