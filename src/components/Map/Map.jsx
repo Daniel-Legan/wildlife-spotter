@@ -36,6 +36,7 @@ const mapStyles = [
 
 function Map() {
     const [userLocation, setUserLocation] = useState(null);
+    const [userLocationMarker, setUserLocationMarker] = useState(null);
     const [address, setAddress] = useState('');
     const [addressToSaveDelete, setAddressToSaveDelete] = useState('');
     const [description, setDescription] = useState('');
@@ -68,7 +69,14 @@ function Map() {
         }
     }, []);
 
+
     const handleShowUserLocation = () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                const { latitude, longitude } = position.coords;
+                setUserLocationMarker({ lat: latitude, lng: longitude });
+            });
+        }
         setShowUserLocation(!showUserLocation);
     };
 
@@ -210,8 +218,6 @@ function Map() {
                 )}
             </PlacesAutocomplete>
 
-            {/* {!isFavorite ? <button onClick={handleSaveFavorite}>Save Location to Favorites</button> : <button onClick={handleRemoveFavorite}>Remove Location from Favorites</button>} */}
-
             <GoogleMap
                 mapContainerStyle={mapContainerStyle}
 
@@ -349,7 +355,7 @@ function Map() {
                     })}
                 {showUserLocation &&
                     <Marker
-                        position={userLocation}
+                        position={userLocationMarker}
                     >
                     </Marker>
                 }
