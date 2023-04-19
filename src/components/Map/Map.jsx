@@ -32,8 +32,6 @@ const mapStyles = [
     }
 ];
 
-// TO-DO: Show the address from the Favorite List and ADD/REMOVE
-
 function Map() {
     const [userLocation, setUserLocation] = useState(null);
     const [userLocationMarker, setUserLocationMarker] = useState(null);
@@ -51,6 +49,8 @@ function Map() {
     const markers = useSelector((store) => store.markers.markers);
     const animals = useSelector((store) => store.markers.animals);
     const dispatch = useDispatch();
+
+    // console.log(addressToSaveDelete);
 
     useEffect(() => {
         dispatch({
@@ -84,11 +84,16 @@ function Map() {
         async (value) => {
             const results = await geocodeByAddress(value);
             const latLng = await getLatLng(results[0]);
+            console.log(latLng);
             dispatch({
                 type: 'CHECK_PLACE_ID',
                 payload: {
                     placeId: results[0].place_id
                 }
+            });
+            dispatch({
+                type: 'SET_CENTER_FAVORITE',
+                payload: null
             });
             setPlaceSelected(true);
             setAddressToSaveDelete(value)
@@ -168,6 +173,19 @@ function Map() {
         setDescription(event.target.value);
     };
 
+    const handleRemoveFromFavoriteList = () => {
+        dispatch({
+            type: 'DELETE_FAVORITE',
+            payload: {
+                placeId: centerFavorite.place_id
+            }
+        });
+        dispatch({
+            type: 'SET_CENTER_FAVORITE',
+            payload: null
+        });
+    };
+
     return (
         <LoadScript
             googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
@@ -196,7 +214,13 @@ function Map() {
                         {!isFavorite && placeSelected && <button onClick={handleSaveFavorite}>Save Location to Favorites</button>}
                         {isFavorite && placeSelected && <button onClick={handleRemoveFavorite}>Remove Location from Favorites</button>}
                         {placeSelected &&
+                            // To-do: Set map center onClick
                             <p>{addressToSaveDelete}</p>
+                        }
+                        {centerFavorite && <button onClick={handleRemoveFromFavoriteList}>Remove Location from Favorites</button>}
+                        {centerFavorite &&
+                            // To-do: Set map center onClick
+                            <p>{centerFavorite.address}</p>
                         }
                         {suggestions.length > 0 && (
                             <div className="autocomplete-dropdown-container">
