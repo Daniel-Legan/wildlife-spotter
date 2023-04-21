@@ -43,14 +43,18 @@ function Map() {
     const [selected, setSelected] = useState(null);
     const [placeSelected, setPlaceSelected] = useState(false);
     const [showUserLocation, setShowUserLocation] = useState(false);
+
     const [libraries] = useState(['places']);
+
     const isFavorite = useSelector((store) => store.favorite.isFavorite);
     const centerFavorite = useSelector((store) => store.favorite.centerFavorite);
     const markers = useSelector((store) => store.markers.markers);
     const animals = useSelector((store) => store.markers.animals);
+    
     const dispatch = useDispatch();
 
-    // console.log(addressToSaveDelete);
+    console.log(addressToSaveDelete);
+    console.log(centerFavorite);
 
     useEffect(() => {
         dispatch({
@@ -184,6 +188,7 @@ function Map() {
             type: 'SET_CENTER_FAVORITE',
             payload: null
         });
+        setAddressToSaveDelete(centerFavorite.address);
     };
 
     return (
@@ -222,6 +227,10 @@ function Map() {
                             // To-do: Set map center onClick
                             <p>{centerFavorite.address}</p>
                         }
+                        {!isFavorite && addressToSaveDelete && !placeSelected && <button onClick={handleSaveFavorite}>Save Location to Favorites</button>}
+                        {isFavorite && !placeSelected && addressToSaveDelete && <button onClick={handleRemoveFavorite}>Remove Location from Favorites</button>}
+                        {addressToSaveDelete && !placeSelected && <p>{addressToSaveDelete}</p>}
+
                         {suggestions.length > 0 && (
                             <div className="autocomplete-dropdown-container">
                                 {loading && <div>Loading...</div>}
