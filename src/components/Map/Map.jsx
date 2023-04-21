@@ -53,8 +53,8 @@ function Map() {
     
     const dispatch = useDispatch();
 
-    console.log(addressToSaveDelete);
-    console.log(centerFavorite);
+    // console.log(addressToSaveDelete);
+    // console.log(centerFavorite);
 
     useEffect(() => {
         dispatch({
@@ -149,6 +149,16 @@ function Map() {
         setSubmit(false);
         setDescription('');
         setAnimalId('');
+    };
+
+    const removeMarker = (markerToRemove) => {
+        dispatch({
+            type: 'DELETE_MARKER',
+            payload: {
+                id: markerToRemove.id
+            }
+        });
+        setSelected(null);
     };
 
     const handleUserLocation = useCallback(() => {
@@ -390,7 +400,10 @@ function Map() {
                                             setSelected(null);
                                         }}
                                     >
-                                        <div>{marker.description}</div>
+                                        <div>
+                                            <p>{marker.description}</p>
+                                            <button onClick={() => removeMarker(marker)}>Remove Marker</button>
+                                        </div>
                                     </InfoWindow>
                                 )}
                             </Marker>
@@ -432,7 +445,7 @@ function Map() {
                 </form>
                 :
                 <div>
-                    <p>CLICK ON MAP TO ADD MARKER</p>
+                    <p>Click on Map to Add Marker</p>
                     <button onClick={handleCancel}>Cancel</button>
                 </div>
             }

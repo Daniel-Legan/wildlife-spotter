@@ -7,7 +7,7 @@ const {
 
 router.get('/', rejectUnauthenticated, (req, res) => {
     const SQLText = `   
-                        SELECT *
+                        SELECT marker.*
                         FROM marker
                         JOIN animal ON animal.id = marker.animal_id
                         WHERE marker.user_id = $1;
@@ -46,6 +46,21 @@ router.get('/animals', rejectUnauthenticated, (req, res) => {
         .then(result => {
             res.send(result.rows);
         })
+        .catch(err => {
+            console.log(err);
+            res.sendStatus(500);
+        })
+});
+
+router.delete('/:id', rejectUnauthenticated, (req, res) => {
+    const markerId = req.params.id;
+    const SQLText = `DELETE FROM marker WHERE user_id = $1 AND id = $2;`;
+
+    pool
+        .query(SQLText, [req.user.id, markerId])
+        .then(() =>
+            res.sendStatus(201)
+        )
         .catch(err => {
             console.log(err);
             res.sendStatus(500);

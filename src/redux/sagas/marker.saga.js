@@ -36,10 +36,22 @@ function* fetchAnimals() {
     }
 }
 
+function* deleteMarker(action) {
+    try {
+        yield axios.delete(`/api/marker/${action.payload.id}`);
+        yield put({
+            type: 'FETCH_MARKERS'
+        });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 function* markerSaga() {
     yield takeLatest('FETCH_MARKERS', fetchMarkers);
     yield takeLatest('ADD_MARKER', addMarker);
     yield takeLatest('FETCH_ANIMALS', fetchAnimals);
+    yield takeLatest('DELETE_MARKER', deleteMarker);
 }
 
 export default markerSaga;
