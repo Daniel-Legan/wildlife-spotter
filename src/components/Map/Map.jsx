@@ -216,21 +216,29 @@ function Map() {
                                 className: 'location-search-input',
                             })}
                         />
-                        {!isFavorite && placeSelected && <button onClick={handleSaveFavorite}>Save Location to Favorites</button>}
-                        {isFavorite && placeSelected && <button onClick={handleRemoveFavorite}>Remove Location from Favorites</button>}
-                        {placeSelected &&
-                            // To-do: Set map center onClick
-                            <p>{addressToSaveDelete}</p>
-                        }
-                        {centerFavorite && <button onClick={handleRemoveFromFavoriteList}>Remove Location from Favorites</button>}
-                        {centerFavorite &&
-                            // To-do: Set map center onClick
-                            <p>{centerFavorite.address}</p>
-                        }
-                        {!isFavorite && addressToSaveDelete && !placeSelected && <button onClick={handleSaveFavorite}>Save Location to Favorites</button>}
-                        {isFavorite && !placeSelected && addressToSaveDelete && <button onClick={handleRemoveFavorite}>Remove Location from Favorites</button>}
-                        {addressToSaveDelete && !placeSelected && <p>{addressToSaveDelete}</p>}
-
+                        {placeSelected && (
+                            <>
+                                {isFavorite ? (
+                                    <button onClick={handleRemoveFavorite}>Remove Location from Favorites</button>
+                                ) : (
+                                    <button onClick={handleSaveFavorite}>Save Location to Favorites</button>
+                                )}
+                                {addressToSaveDelete && <p>{addressToSaveDelete}</p>}
+                            </>
+                        )}
+                        {centerFavorite && (
+                            <>
+                                <button onClick={handleRemoveFromFavoriteList}>Remove Location from Favorites</button>
+                                <p>{centerFavorite.address}</p>
+                            </>
+                        )}
+                        {addressToSaveDelete && !placeSelected && (
+                            <>
+                                {!isFavorite && <button onClick={handleSaveFavorite}>Save Location to Favorites</button>}
+                                {isFavorite && <button onClick={handleRemoveFavorite}>Remove Location from Favorites</button>}
+                                <p>{addressToSaveDelete}</p>
+                            </>
+                        )}
                         {suggestions.length > 0 && (
                             <div className="autocomplete-dropdown-container">
                                 {loading && <div>Loading...</div>}
