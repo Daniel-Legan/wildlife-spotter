@@ -67,4 +67,17 @@ router.delete('/:id', rejectUnauthenticated, (req, res) => {
         })
 });
 
+router.put('/:id', (req, res) => {
+    const SQLText = `UPDATE marker SET description = $1 WHERE id = $2 AND user_id = $3;`;
+    pool
+        .query(SQLText, [req.body.description, req.params.id, req.user.id])
+        .then(() =>
+            res.sendStatus(201)
+        )
+        .catch(err => {
+            console.log(err);
+            res.sendStatus(500);
+        })
+});
+
 module.exports = router;

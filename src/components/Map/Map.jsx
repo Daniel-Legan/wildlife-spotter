@@ -44,6 +44,7 @@ function Map() {
     const [placeSelected, setPlaceSelected] = useState(false);
     const [showUserLocation, setShowUserLocation] = useState(false);
     const [editable, setEditable] = useState(false);
+    const [editedItem, setEditedItem] = useState(null);
 
     const [libraries] = useState(['places']);
 
@@ -51,7 +52,7 @@ function Map() {
     const centerFavorite = useSelector((store) => store.favorite.centerFavorite);
     const markers = useSelector((store) => store.markers.markers);
     const animals = useSelector((store) => store.markers.animals);
-    
+
     const dispatch = useDispatch();
 
     // console.log(addressToSaveDelete);
@@ -203,10 +204,27 @@ function Map() {
     };
 
     const handleEditClick = () => {
+        setEditedItem({ ...selected });
         setEditable(true);
     };
 
     const handleCancelEditClick = () => {
+        setEditable(false);
+    };
+
+    const handleEditDescriptionChange = (event) => {
+        setEditedItem({
+            ...editedItem,
+            [event.target.name]: event.target.value
+        });
+    };
+
+    const handleSaveClick = () => {
+        dispatch({
+            type: 'EDIT_DESCRIPTION',
+            payload: editedItem
+        });
+        setEditedItem(null);
         setEditable(false);
     };
 
@@ -412,16 +430,16 @@ function Map() {
                                     >
                                         {editable ? (
                                             <div>
-                                                <input type="text" value={marker.description} onChange={handleDescriptionChange} />
-                                                {/* <button onClick={handleSaveClick}>Save</button> */}
+                                                <input type="text" name="description" value={editedItem.description} onChange={handleEditDescriptionChange} />
+                                                <button onClick={handleSaveClick}>Save</button>
                                                 <button onClick={handleCancelEditClick}>Cancel</button>
                                             </div>
                                         ) : (
-                                                <div>
-                                                    <p>{marker.description}</p>
-                                                    <button onClick={handleEditClick}>Edit</button>
-                                                    <button onClick={() => removeMarker(marker)}>Remove Marker</button>
-                                                </div>
+                                            <div>
+                                                <p>{marker.description}</p>
+                                                <button onClick={handleEditClick}>Edit</button>
+                                                <button onClick={() => removeMarker(marker)}>Remove Marker</button>
+                                            </div>
                                         )}
                                     </InfoWindow>
                                 )}

@@ -16,9 +16,7 @@ function* fetchMarkers() {
 function* addMarker(action) {
     try {
         yield axios.post('/api/marker', action.payload);
-        yield put({
-            type: 'FETCH_MARKERS'
-        });
+        yield put({ type: 'FETCH_MARKERS' });
     } catch (error) {
         console.log(error);
     }
@@ -39,9 +37,16 @@ function* fetchAnimals() {
 function* deleteMarker(action) {
     try {
         yield axios.delete(`/api/marker/${action.payload.id}`);
-        yield put({
-            type: 'FETCH_MARKERS'
-        });
+        yield put({ type: 'FETCH_MARKERS' });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+function* editDescription(action) {
+    try {
+        yield axios.put(`/api/marker/${action.payload.id}`, action.payload);
+        yield put({ type: 'FETCH_MARKERS' });
     } catch (error) {
         console.log(error);
     }
@@ -52,6 +57,7 @@ function* markerSaga() {
     yield takeLatest('ADD_MARKER', addMarker);
     yield takeLatest('FETCH_ANIMALS', fetchAnimals);
     yield takeLatest('DELETE_MARKER', deleteMarker);
+    yield takeLatest('EDIT_DESCRIPTION', editDescription);
 }
 
 export default markerSaga;
