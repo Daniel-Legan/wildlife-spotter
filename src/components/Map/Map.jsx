@@ -43,6 +43,7 @@ function Map() {
     const [selected, setSelected] = useState(null);
     const [placeSelected, setPlaceSelected] = useState(false);
     const [showUserLocation, setShowUserLocation] = useState(false);
+    const [editable, setEditable] = useState(false);
 
     const [libraries] = useState(['places']);
 
@@ -199,6 +200,14 @@ function Map() {
             payload: null
         });
         setAddressToSaveDelete(centerFavorite.address);
+    };
+
+    const handleEditClick = () => {
+        setEditable(true);
+    };
+
+    const handleCancelEditClick = () => {
+        setEditable(false);
     };
 
     return (
@@ -398,12 +407,22 @@ function Map() {
                                     <InfoWindow
                                         onCloseClick={() => {
                                             setSelected(null);
+                                            setEditable(false);
                                         }}
                                     >
-                                        <div>
-                                            <p>{marker.description}</p>
-                                            <button onClick={() => removeMarker(marker)}>Remove Marker</button>
-                                        </div>
+                                        {editable ? (
+                                            <div>
+                                                <input type="text" value={marker.description} onChange={handleDescriptionChange} />
+                                                {/* <button onClick={handleSaveClick}>Save</button> */}
+                                                <button onClick={handleCancelEditClick}>Cancel</button>
+                                            </div>
+                                        ) : (
+                                                <div>
+                                                    <p>{marker.description}</p>
+                                                    <button onClick={handleEditClick}>Edit</button>
+                                                    <button onClick={() => removeMarker(marker)}>Remove Marker</button>
+                                                </div>
+                                        )}
                                     </InfoWindow>
                                 )}
                             </Marker>
