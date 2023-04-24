@@ -57,7 +57,7 @@ function Map() {
 
     // console.log(addressToSaveDelete);
     // console.log(centerFavorite);
-    console.log(selected);
+    // console.log(selected);
 
     useEffect(() => {
         dispatch({
@@ -437,8 +437,8 @@ function Map() {
                                             </div>
                                         ) : (
                                             <div>
-                                                    <p>{marker.description}</p>
-                                                    <p>Updated: {new Date(marker.time).toLocaleString()}</p>
+                                                <p>{marker.description}</p>
+                                                <p>Updated: {new Date(marker.time).toLocaleString()}</p>
                                                 <button onClick={handleEditClick}>Edit</button>
                                                 <button onClick={() => removeMarker(marker)}>Remove Marker</button>
                                             </div>
