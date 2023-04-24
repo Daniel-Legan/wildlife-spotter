@@ -437,7 +437,7 @@ function Map() {
                                         ) : (
                                             <div>
                                                 <p>{marker.description}</p>
-                                                <button onClick={handleEditClick}>Edit</button>
+                                                <p>Updated: {new Date(marker.time).toLocaleString()}</p>
                                                 <button onClick={() => removeMarker(marker)}>Remove Marker</button>
                                             </div>
                                         )}
