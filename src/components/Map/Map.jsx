@@ -472,7 +472,7 @@ function Map() {
                         </label>
                         <label htmlFor="animal-select">Animal:</label>
                         <select value={animalId} onChange={(event) => setAnimalId(event.target.value)} required>
-                            <option value="" disabled>Select Animal</option>
+                            <option value="" disabled></option>
                             {animals.map((animal) => (
                                 <option key={animal.id} value={animal.id}>
                                     {animal.animal}
