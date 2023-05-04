@@ -55,8 +55,10 @@ function Map() {
 
     const dispatch = useDispatch();
 
-    // console.log(addressToSaveDelete);
-    // console.log(centerFavorite);
+    // console.log(address);
+    // console.log(addressToSaveDelete); // 'Zion National Park'
+    // console.log('centerFavorite', centerFavorite);
+    // console.log('userLocation', userLocation);
     // console.log(selected);
 
     useEffect(() => {
@@ -91,7 +93,6 @@ function Map() {
         async (value) => {
             const results = await geocodeByAddress(value);
             const latLng = await getLatLng(results[0]);
-            console.log(latLng);
             dispatch({
                 type: 'CHECK_PLACE_ID',
                 payload: {
@@ -106,10 +107,7 @@ function Map() {
             setAddressToSaveDelete(value)
             setAddress('');
             setUserLocation(latLng);
-        },
-        []
-    );
-
+        }, []);
 
     const handleSaveFavorite = useCallback(
         async () => {
@@ -137,7 +135,6 @@ function Map() {
                     placeId: results[0].place_id
                 }
             });
-            // setAddress('');
         }, [addressToSaveDelete]);
 
     const handleChange = useCallback((value) => {
@@ -168,6 +165,10 @@ function Map() {
         navigator.geolocation.getCurrentPosition((position) => {
             const { latitude, longitude } = position.coords;
             setUserLocation({ lat: latitude, lng: longitude });
+        });
+        dispatch({
+            type: 'SET_CENTER_FAVORITE',
+            payload: null
         });
     }, []);
 
@@ -229,6 +230,17 @@ function Map() {
         setEditable(false);
     };
 
+    const setCenterFavoriteLocation = () => {
+        setUserLocation({ lat: Number(centerFavorite.lat), lng: Number(centerFavorite.lng) });
+    };
+
+    const handleCenterLocation = useCallback(
+        async () => {
+            const results = await geocodeByAddress(addressToSaveDelete);
+            const latLng = await getLatLng(results[0]);
+            setUserLocation(latLng);
+        }, [addressToSaveDelete]);
+
     return (
         <LoadScript
             googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
@@ -261,20 +273,20 @@ function Map() {
                                 ) : (
                                     <button onClick={handleSaveFavorite}>Save Location to Favorites</button>
                                 )}
-                                {addressToSaveDelete && <p>{addressToSaveDelete}</p>}
+                                {addressToSaveDelete && <p onClick={handleCenterLocation}>{addressToSaveDelete}</p>}
                             </>
                         )}
                         {centerFavorite && (
                             <>
                                 <button onClick={handleRemoveFromFavoriteList}>Remove Location from Favorites</button>
-                                <p>{centerFavorite.address}</p>
+                                <p onClick={setCenterFavoriteLocation}>{centerFavorite.address}</p>
                             </>
                         )}
                         {addressToSaveDelete && !placeSelected && (
                             <>
                                 {!isFavorite && <button onClick={handleSaveFavorite}>Save Location to Favorites</button>}
                                 {isFavorite && <button onClick={handleRemoveFavorite}>Remove Location from Favorites</button>}
-                                <p>{addressToSaveDelete}</p>
+                                <p onClick={handleCenterLocation}>{addressToSaveDelete}</p>
                             </>
                         )}
                         {suggestions.length > 0 && (
