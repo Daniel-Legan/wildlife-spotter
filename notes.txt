@@ -1,0 +1,4 @@
+[ ]. break up state into redux store to reduce the prop usage for the AddMarkerForm
+[ ]. refactor the PlacesAutocomplete
+[ ]. refactor the GoogleMap
+[ ]. style
