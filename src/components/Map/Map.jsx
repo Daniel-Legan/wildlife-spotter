@@ -6,8 +6,6 @@ import PlacesAutocomplete, {
 } from 'react-places-autocomplete';
 import { GoogleMap, Marker, InfoWindow, LoadScript } from '@react-google-maps/api';
 
-import MarkerForm from '../MarkerForm/MarkerForm';
-
 const mapContainerStyle = {
     width: '100%',
     height: '70vh',
@@ -58,12 +56,8 @@ function Map() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch({
-            type: 'FETCH_MARKERS'
-        });
-        dispatch({
-            type: 'FETCH_ANIMALS'
-        });
+        dispatch({ type: 'FETCH_MARKERS' });
+        dispatch({ type: 'FETCH_ANIMALS' });
         if (centerFavorite === null) {
             navigator.geolocation.getCurrentPosition((position) => {
                 const { latitude, longitude } = position.coords;
@@ -91,9 +85,7 @@ function Map() {
             const latLng = await getLatLng(results[0]);
             dispatch({
                 type: 'CHECK_PLACE_ID',
-                payload: {
-                    placeId: results[0].place_id
-                }
+                payload: { placeId: results[0].place_id }
             });
             dispatch({
                 type: 'SET_CENTER_FAVORITE',
@@ -127,9 +119,7 @@ function Map() {
             const results = await geocodeByAddress(addressToSaveDelete);
             dispatch({
                 type: 'DELETE_FAVORITE',
-                payload: {
-                    placeId: results[0].place_id
-                }
+                payload: { placeId: results[0].place_id }
             });
         }, [addressToSaveDelete]);
 
@@ -150,9 +140,7 @@ function Map() {
     const removeMarker = (markerToRemove) => {
         dispatch({
             type: 'DELETE_MARKER',
-            payload: {
-                id: markerToRemove.id
-            }
+            payload: { id: markerToRemove.id }
         });
         setSelected(null);
     };
@@ -173,9 +161,7 @@ function Map() {
             const newMarkerData = { animalId: animalId, lat: event.latLng.lat(), lng: event.latLng.lng(), description };
             dispatch({
                 type: 'ADD_MARKER',
-                payload: {
-                    newMarkerData: newMarkerData
-                }
+                payload: { newMarkerData: newMarkerData }
             });
             setDescription('');
             setAnimalId('');
@@ -183,16 +169,14 @@ function Map() {
         }
     };
 
-    // const handleDescriptionChange = (event) => {
-    //     setDescription(event.target.value);
-    // };
+    const handleDescriptionChange = (event) => {
+        setDescription(event.target.value);
+    };
 
     const handleRemoveFromFavoriteList = () => {
         dispatch({
             type: 'DELETE_FAVORITE',
-            payload: {
-                placeId: centerFavorite.place_id
-            }
+            payload: { placeId: centerFavorite.place_id }
         });
         dispatch({
             type: 'SET_CENTER_FAVORITE',
@@ -236,21 +220,6 @@ function Map() {
             const latLng = await getLatLng(results[0]);
             setUserLocation(latLng);
         }, [addressToSaveDelete]);
-    
-    const markerFormProps = {
-        submit,
-        description,
-        animalId,
-        animals,
-        handleDescriptionChange: (event) => setDescription(event.target.value),
-        setAnimalId,
-        handleSubmit: () => setSubmit(true),
-        handleCancel: () => {
-            setSubmit(false);
-            setDescription('');
-            setAnimalId('');
-        }
-    };
 
     return (
         <LoadScript
@@ -479,7 +448,7 @@ function Map() {
                 }
             </GoogleMap>
 
-            {/* {!submit ?
+            {!submit ?
                 <form onSubmit={handleSubmit}>
                     <div>
                         <label htmlFor="description">
@@ -510,9 +479,7 @@ function Map() {
                     <p>Click on Map to Add Marker</p>
                     <button onClick={handleCancel}>Cancel</button>
                 </div>
-            } */}
-
-            <MarkerForm {...markerFormProps} />
+            }
         </LoadScript>
     );
 }
