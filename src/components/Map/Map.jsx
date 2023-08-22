@@ -6,6 +6,8 @@ import PlacesAutocomplete, {
 } from 'react-places-autocomplete';
 import { GoogleMap, Marker, InfoWindow, LoadScript } from '@react-google-maps/api';
 
+import AddMarkerForm from '../AddMarkerForm/AddMarkerFom';
+
 const mapContainerStyle = {
     width: '100%',
     height: '70vh',
@@ -448,7 +450,7 @@ function Map() {
                 }
             </GoogleMap>
 
-            {!submit ?
+            {/* {!submit ?
                 <form onSubmit={handleSubmit}>
                     <div>
                         <label htmlFor="description">
@@ -479,7 +481,18 @@ function Map() {
                     <p>Click on Map to Add Marker</p>
                     <button onClick={handleCancel}>Cancel</button>
                 </div>
-            }
+            } */}
+            
+            <AddMarkerForm
+                submit={submit}
+                description={description}
+                animalId={animalId}
+                animals={animals}
+                handleDescriptionChange={handleDescriptionChange}
+                setAnimalId={setAnimalId}
+                handleSubmit={handleSubmit}
+                handleCancel={handleCancel}
+            />
         </LoadScript>
     );
 }
