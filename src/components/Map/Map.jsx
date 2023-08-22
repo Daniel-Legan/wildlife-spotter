@@ -6,6 +6,8 @@ import PlacesAutocomplete, {
 } from 'react-places-autocomplete';
 import { GoogleMap, Marker, InfoWindow, LoadScript } from '@react-google-maps/api';
 
+import MarkerForm from '../MarkerForm/MarkerForm';
+
 const mapContainerStyle = {
     width: '100%',
     height: '70vh',
@@ -54,12 +56,6 @@ function Map() {
     const animals = useSelector((store) => store.markers.animals);
 
     const dispatch = useDispatch();
-
-    // console.log(address);
-    // console.log(addressToSaveDelete); // 'Zion National Park'
-    // console.log('centerFavorite', centerFavorite);
-    // console.log('userLocation', userLocation);
-    // console.log(selected);
 
     useEffect(() => {
         dispatch({
@@ -187,9 +183,9 @@ function Map() {
         }
     };
 
-    const handleDescriptionChange = (event) => {
-        setDescription(event.target.value);
-    };
+    // const handleDescriptionChange = (event) => {
+    //     setDescription(event.target.value);
+    // };
 
     const handleRemoveFromFavoriteList = () => {
         dispatch({
@@ -240,6 +236,21 @@ function Map() {
             const latLng = await getLatLng(results[0]);
             setUserLocation(latLng);
         }, [addressToSaveDelete]);
+    
+    const markerFormProps = {
+        submit,
+        description,
+        animalId,
+        animals,
+        handleDescriptionChange: (event) => setDescription(event.target.value),
+        setAnimalId,
+        handleSubmit: () => setSubmit(true),
+        handleCancel: () => {
+            setSubmit(false);
+            setDescription('');
+            setAnimalId('');
+        }
+    };
 
     return (
         <LoadScript
@@ -468,7 +479,7 @@ function Map() {
                 }
             </GoogleMap>
 
-            {!submit ?
+            {/* {!submit ?
                 <form onSubmit={handleSubmit}>
                     <div>
                         <label htmlFor="description">
@@ -499,7 +510,9 @@ function Map() {
                     <p>Click on Map to Add Marker</p>
                     <button onClick={handleCancel}>Cancel</button>
                 </div>
-            }
+            } */}
+
+            <MarkerForm {...markerFormProps} />
         </LoadScript>
     );
 }
