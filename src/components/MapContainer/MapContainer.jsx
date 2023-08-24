@@ -8,34 +8,35 @@ import { GoogleMap, Marker, InfoWindow, LoadScript } from '@react-google-maps/ap
 
 import AddMarkerForm from '../AddMarkerForm/AddMarkerFom';
 import SearchPlaces from '../SearchPlaces/SearchPlaces';
+import GoogleMapComponent from '../GoogleMapComponent/GoogleMapComponent';
 
-const mapContainerStyle = {
-    width: '100%',
-    height: '70vh',
-};
+// const mapContainerStyle = {
+//     width: '100%',
+//     height: '70vh',
+// };
 
-const mapStyles = [
-    {
-        featureType: "poi",
-        elementType: "labels",
-        stylers: [
-            {
-                visibility: "off"
-            }
-        ]
-    },
-    {
-        featureType: "poi.park",
-        elementType: "labels",
-        stylers: [
-            {
-                visibility: "on"
-            }
-        ]
-    }
-];
+// const mapStyles = [
+//     {
+//         featureType: "poi",
+//         elementType: "labels",
+//         stylers: [
+//             {
+//                 visibility: "off"
+//             }
+//         ]
+//     },
+//     {
+//         featureType: "poi.park",
+//         elementType: "labels",
+//         stylers: [
+//             {
+//                 visibility: "on"
+//             }
+//         ]
+//     }
+// ];
 
-function Map() {
+function MapContainer() {
     const [userLocation, setUserLocation] = useState(null);
     const [userLocationMarker, setUserLocationMarker] = useState(null);
     const [address, setAddress] = useState('');
@@ -310,7 +311,7 @@ function Map() {
                 )}
             </PlacesAutocomplete> */}
 
-            <GoogleMap
+            {/* <GoogleMap
                 mapContainerStyle={mapContainerStyle}
 
                 center={userLocation || null}
@@ -465,7 +466,24 @@ function Map() {
                     >
                     </Marker>
                 }
-            </GoogleMap>
+            </GoogleMap> */}
+
+            <GoogleMapComponent
+                setSelected={setSelected}
+                userLocationMarker={userLocationMarker}
+                showUserLocation={showUserLocation}
+                userLocation={userLocation}
+                markers={markers}
+                selected={selected}
+                handleMapClick={handleMapClick}
+                handleEditClick={handleEditClick}
+                handleCancelEditClick={handleCancelEditClick}
+                handleSaveClick={handleSaveClick}
+                handleEditDescriptionChange={handleEditDescriptionChange}
+                editable={editable}
+                editedItem={editedItem}
+                removeMarker={removeMarker}
+            />
 
             {/* {!submit ?
                 <form onSubmit={handleSubmit}>
@@ -514,4 +532,4 @@ function Map() {
     );
 }
 
-export default Map;
+export default MapContainer;
