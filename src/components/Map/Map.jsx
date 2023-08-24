@@ -7,6 +7,7 @@ import PlacesAutocomplete, {
 import { GoogleMap, Marker, InfoWindow, LoadScript } from '@react-google-maps/api';
 
 import AddMarkerForm from '../AddMarkerForm/AddMarkerFom';
+import SearchPlaces from '../SearchPlaces/SearchPlaces';
 
 const mapContainerStyle = {
     width: '100%',
@@ -232,7 +233,23 @@ function Map() {
             <button onClick={handleShowUserLocation}>
                 {showUserLocation ? 'Hide' : 'Show'} My Location
             </button>
-            <PlacesAutocomplete
+
+            <SearchPlaces
+                address={address}
+                centerFavorite={centerFavorite}
+                onSelect={handleSelect}
+                onChange={handleChange}
+                placeSelected={placeSelected}
+                isFavorite={isFavorite}
+                addressToSaveDelete={addressToSaveDelete}
+                handleCenterLocation={handleCenterLocation}
+                handleRemoveFromFavoriteList={handleRemoveFromFavoriteList}
+                handleRemoveFavorite={handleRemoveFavorite}
+                handleSaveFavorite={handleSaveFavorite}
+                setCenterFavoriteLocation={setCenterFavoriteLocation}
+            />
+
+            {/* <PlacesAutocomplete
                 value={address}
                 onSelect={handleSelect}
                 onChange={handleChange}
@@ -291,7 +308,7 @@ function Map() {
                         )}
                     </div>
                 )}
-            </PlacesAutocomplete>
+            </PlacesAutocomplete> */}
 
             <GoogleMap
                 mapContainerStyle={mapContainerStyle}
